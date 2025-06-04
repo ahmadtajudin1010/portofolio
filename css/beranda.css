@@ -1,19 +1,33 @@
 /* Gaya Dasar */
+:root {
+    --primary-color: #007bff; /* Biru standar */
+    --secondary-color: #0056b3; /* Biru lebih gelap */
+    --accent-color: #00fbff; /* Biru terang untuk beberapa elemen */
+    --text-dark: #333;
+    --text-light: #ffffff;
+    --bg-light: #f4f7f6;
+    --bg-white: #fff;
+    --font-main: 'Poppins', sans-serif; /* Ganti font, Poppins populer dan mudah dibaca */
+    --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --shadow-heavy: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 body {
-    font-family: sans-serif; /* Ganti dengan font yang Anda suka */
+    font-family: var(--font-main);
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     line-height: 1.6;
-    color: #333;
-    background-color: #f4f7f6;
-    overflow-x: hidden; /* Mencegah overflow horizontal dari animasi */
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+    overflow-x: hidden;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px; /* Padding horizontal */
+    padding: 0 20px;
 }
 
 h1, h2, h3 {
@@ -27,7 +41,7 @@ h1 {
 
 h2 {
     font-size: 2em;
-    text-align: center; /* Gaya default h2 di section */
+    text-align: center;
 }
 
 p {
@@ -36,33 +50,34 @@ p {
 
 .btn {
     display: inline-block;
-    background-color: #00fbff; /* Warna biru */
-    color: #333;
+    background-color: var(--primary-color); /* Menggunakan variabel */
+    color: var(--text-light); /* Teks putih untuk kontras lebih baik */
     padding: 10px 20px;
     text-decoration: none;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Tambah transform */
 }
 
 .btn:hover {
-    background-color: #ffffff; /* Warna biru lebih gelap saat hover */
+    background-color: var(--secondary-color); /* Menggunakan variabel */
+    transform: translateY(-2px); /* Efek naik sedikit saat hover */
 }
 
 .link {
-    color: #007bff;
+    color: var(--primary-color); /* Menggunakan variabel */
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .link:hover {
-    color: #0056b3;
+    color: var(--secondary-color); /* Menggunakan variabel */
     text-decoration: underline;
 }
 
 /* Header Styling */
 .header {
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: var(--bg-white);
+    box-shadow: var(--shadow-light);
     padding: 10px 0;
     position: sticky;
     top: 0;
@@ -75,224 +90,227 @@ p {
     align-items: center;
 }
 
-/* Gaya untuk Chat Trigger (berisi gambar) */
 .chat-trigger {
-    cursor: pointer; /* Menandakan bisa diklik */
-    transition: transform 0.3s ease; /* Transisi untuk efek hover pada gambar */
-    display: inline-block; /* Penting untuk transform */
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    display: inline-block;
 }
 
 .chat-trigger:hover {
-    transform: scale(1.3); /* Perbesar sedikit saat hover */
+    transform: scale(1.1); /* Perbesar sedikit saat hover, bukan 1.3 */
 }
 
-/* Gaya untuk Gambar di dalam Chat Trigger */
 .chat-trigger img {
-    display: block; /* Menghilangkan ruang kosong di bawah gambar */
-    width: 80px; /* Ukuran default gambar */
-    height: 50px; /* Ukuran default gambar */
-    border-radius: 50%; /* Membuat gambar bulat (opsional) */
-    object-fit: cover; /* Memastikan gambar mengisi area tanpa distorsi */
+    display: block;
+    width: 60px; /* Ukuran default gambar disesuaikan */
+    height: 60px; /* Ukuran default gambar disesuaikan */
+    border-radius: 50%;
+    object-fit: cover;
 }
-
 
 .main-nav .nav-list {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: flex; /* Default: horizontal di desktop */
+    display: flex;
 }
 
 .main-nav .nav-list li {
-    margin-left: 20px; /* Jarak antar item navigasi di desktop */
+    margin-left: 20px;
 }
 
 .main-nav .nav-list a {
-    color: #333;
+    color: var(--text-dark);
     text-decoration: none;
     font-weight: bold;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, transform 0.2s ease; /* Tambah transform */
 }
 
 .main-nav .nav-list a:hover {
-    color: #007bff;
+    color: var(--primary-color);
+    transform: translateY(-2px); /* Efek naik sedikit saat hover */
 }
 
-.menu-toggle { /* Tombol menu (sembunyikan di desktop) */
+.menu-toggle {
     display: none;
     background: none;
     border: none;
     font-size: 1.8em;
     cursor: pointer;
-    color: #333;
-    transition: transform 0.3s ease; /* Transisi untuk ikon X */
+    color: var(--text-dark);
+    transition: transform 0.3s ease;
 }
 
 .menu-toggle i {
-    pointer-events: none; /* Agar klik pada tombol, bukan ikon */
+    pointer-events: none;
 }
 
 
 /* Section Styling */
 section {
-    padding: 80px 0; /* Padding vertikal untuk setiap section */
-    text-align: center; /* Pusatkan konten di dalam section secara default */
+    padding: 80px 0;
+    text-align: center;
 }
 
 .hero-section {
-    background: linear-gradient(to right, #007bff, #0056b3); /* Gradien biru */
-    color: white;
-    padding: 100px 0; /* Padding lebih besar untuk hero */
-    display: flex; /* Gunakan flexbox untuk menata konten di dalamnya */
-    justify-content: center; /* Pusatkan konten horizontal */
-    align-items: center; /* Pusatkan konten vertikal */
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: var(--text-light);
+    padding: 100px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Gaya untuk Container di dalam Hero Section */
 .hero-section .container {
-    display: flex; /* Jadikan container flex container */
-    flex-direction: column; /* Tumpuk item secara vertikal */
-    align-items: center; /* Ini yang memusatkan item horizontal di dalam container (termasuk tombol) */
-    /* Hapus text-align dari sini */
-    /* text-align: left; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* Gaya untuk Kontainer Foto dan Teks di Hero */
 .hero-content {
-    display: flex; /* Gunakan flexbox untuk menata foto dan teks */
-    flex-direction: column; /* Default: tumpuk vertikal di mobile */
-    align-items: center; /* Pusatkan item di mobile */
-    gap: 30px; /* Jarak antara foto dan teks */
-    margin-bottom: 30px; /* Jarak antara konten hero dan tombol */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
 }
 
-/* Gaya untuk Foto Profil di Hero */
 .profile-photo {
-    width: 180px; /* Ukuran default foto */
-    height: 180px; /* Ukuran default foto */
-    border-radius: 50%; /* Membuat foto bulat */
-    object-fit: cover; /* Memastikan foto mengisi area tanpa distorsi */
-    border: 5px solid rgba(255, 255, 255, 0.8); /* Border putih transparan */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Bayangan */
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid rgba(255, 255, 255, 0.8);
+    box-shadow: var(--shadow-heavy);
 }
 
-/* Gaya untuk Kontainer Teks di Hero */
 .hero-text {
-    text-align: center; /* Teks di tengah di mobile */
+    text-align: center;
 }
 
 .hero-section h1 {
-    margin-bottom: 5px; /* Kurangi jarak bawah h1 */
+    margin-bottom: 5px;
 }
 
 .hero-section p {
-    margin-bottom: 0; /* Hapus jarak bawah p */
+    margin-bottom: 0;
 }
 
 
 .about-section {
-    background-color: #fff;
-    /* text-align: center; <-- Ini sudah ada di gaya 'section' di atas */
+    background-color: var(--bg-white);
 }
 
 .about-section p {
     max-width: 800px;
     margin: 0 auto 20px auto;
-    /* Set text-align khusus untuk paragraf About */
-    text-align: justify; /* Teks rata kanan kiri untuk paragraf About */
+    text-align: justify;
+    text-indent: 30px; /* Nilai ini bisa Anda sesuaikan */
 }
 
-/* >>> Gaya untuk elemen yang dianimasikan saat scroll (opacity dan transform saja) <<< */
-/* Gaya awal: tidak terlihat dan sedikit di bawah */
+/* Animasi saat scroll */
 .fade-in-slide-up {
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Transisi animasi */
-    /* Penting: Atur transition-delay ke 0 secara default */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     transition-delay: 0s;
 }
 
-/* Gaya saat elemen terlihat (class 'is-visible' ditambahkan oleh JS) */
-/* Elemen akan terlihat dan kembali ke posisi normal */
 .fade-in-slide-up.is-visible {
     opacity: 1;
     transform: translateY(0);
-    /* transition-delay akan diatur oleh JS untuk efek berurutan */
 }
-/* <<< Akhir Gaya untuk elemen yang dianimasikan saat scroll >>> */
 
 
 .projects-section {
-    background-color: #e9ecef; /* Warna abu-abu muda */
+    background-color: var(--bg-light);
 }
 
 .project-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Grid responsif */
-    gap: 30px; /* Jarak antar item grid */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
     margin-top: 40px;
 }
 
 .project-item {
-    background-color: #fff;
+    background-color: var(--bg-white);
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-medium);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Tambah box-shadow */
 }
 
 .project-item:hover {
-    transform: translateY(-5px); /* Efek hover naik sedikit */
+    transform: translateY(-8px); /* Efek naik sedikit lebih tinggi */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Bayangan lebih intens */
 }
 
 .project-item img {
     width: 100%;
-    height: 200px; /* Tinggi gambar tetap */
-    object-fit: cover; /* Gambar akan menutupi area tanpa distorsi */
+    height: 200px;
+    object-fit: cover;
+    display: block; /* Menghilangkan ruang kosong di bawah gambar */
 }
 
 .project-info {
     padding: 20px;
     text-align: left;
-    flex-grow: 1; /* Memastikan info mengisi ruang yang tersisa */
+    flex-grow: 1;
 }
 
 .project-info h3 {
     margin-top: 0;
     margin-bottom: 10px;
     font-size: 1.5em;
+    color: var(--primary-color); /* Warna judul proyek */
 }
 
 .project-info p {
     margin-bottom: 15px;
     font-size: 0.9em;
+    color: #555; /* Warna teks deskripsi */
 }
 
 .skills-section {
-    background-color: #fff;
+    background-color: var(--bg-white);
 }
 
 .skills-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px; /* Jarak antar tag keahlian */
+    gap: 10px;
     margin-top: 30px;
 }
 
 .skill-tag {
-    background-color: #007bff;
-    color: white;
-    padding: 8px 15px;
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: 8px 15px; /* Sesuaikan padding jika perlu */
     border-radius: 20px;
     font-size: 0.9em;
+    transition: background-color 0.3s ease;
+    display: flex; /* Menggunakan flexbox untuk menata icon dan teks */
+    align-items: center; /* Pusatkan secara vertikal */
+    gap: 8px; /* Jarak antara icon dan teks */
+}
+
+.skill-tag:hover {
+    background-color: var(--secondary-color);
+}
+
+.skill-tag img {
+    height: 1.2em; /* Ukuran icon relatif terhadap ukuran font tag */
+    width: auto;
+    vertical-align: middle; /* Memastikan icon sejajar dengan teks */
 }
 
 .contact-section {
-    background: linear-gradient(to right, #007bff, #0056b3);
-    color: white;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: var(--text-light);
 }
 
 .social-links {
@@ -301,20 +319,21 @@ section {
 }
 
 .social-icon {
-    color: white;
+    color: var(--text-light);
     margin: 0 10px;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .social-icon:hover {
-    color: #007bff;
+    color: var(--accent-color); /* Warna aksen saat hover */
+    transform: scale(1.2); /* Efek membesar lebih terlihat */
 }
 
 
 /* Footer Styling */
 .footer {
-    background-color: #333;
-    color: white;
+    background-color: var(--text-dark); /* Warna gelap untuk footer */
+    color: var(--text-light);
     padding: 40px 0;
     text-align: center;
     font-size: 0.9em;
@@ -329,84 +348,89 @@ section {
     opacity: 0.8;
 }
 
-.footer-note img { /* Gaya untuk ikon Gemini di footer */
-    height: 1em; /* Sesuaikan tinggi ikon agar sejajar teks */
-    vertical-align: middle; /* Pusatkan vertikal */
-    margin-left: 5px; /* Jarak dari teks */
+.footer-note img {
+    height: 1em;
+    vertical-align: middle;
+    margin-left: 5px;
 }
 
 
 /* --- Gaya Chat Window --- */
 .chat-window {
-    position: fixed; /* Posisi tetap di layar */
-    bottom: 20px; /* Jarak dari bawah */
-    right: 20px; /* Jarak dari kanan */
-    width: 350px; /* Lebar jendela chat */
-    height: 450px; /* Tinggi jendela chat */
-    background-color: #fff;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    height: 450px;
+    background-color: var(--bg-white);
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-heavy);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    z-index: 1100; /* Pastikan di atas elemen lain */
-    /* Sembunyikan secara default */
-    transform: scale(0); /* Mulai dari skala 0 */
-    transform-origin: bottom right; /* Animasi dari sudut kanan bawah */
-    opacity: 0; /* Mulai tidak terlihat */
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Transisi saat buka/tutup */
+    z-index: 1100;
+    transform: scale(0);
+    transform-origin: bottom right;
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 
-.chat-window.open { /* Class 'open' akan ditambahkan oleh JS */
-    transform: scale(1); /* Skala 1 (ukuran normal) */
-    opacity: 1; /* Terlihat */
+.chat-window.open {
+    transform: scale(1);
+    opacity: 1;
 }
 
 .chat-header {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--text-light);
     padding: 10px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
-    flex-shrink: 0; /* Jangan menyusut */
+    flex-shrink: 0;
 }
 
 .chat-header .close-chat {
     background: none;
     border: none;
-    color: white;
+    color: var(--text-light);
     font-size: 1.5em;
     cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.chat-header .close-chat:hover {
+    transform: rotate(90deg); /* Animasi putar saat close */
 }
 
 .chat-body {
-    flex-grow: 1; /* Mengisi ruang yang tersedia */
+    flex-grow: 1;
     padding: 15px;
-    overflow-y: auto; /* Scroll jika konten melebihi tinggi */
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Jarak antar pesan */
+    gap: 10px;
+    background-color: #fcfcfc; /* Warna latar belakang chat body */
 }
 
 .message {
-    max-width: 80%; /* Lebar maksimum pesan */
+    max-width: 80%;
     padding: 10px;
     border-radius: 8px;
-    word-wrap: break-word; /* Mencegah teks melebihi batas */
+    word-wrap: break-word;
 }
 
-.user-message { /* Gaya untuk pesan dari pengguna */
-    align-self: flex-end; /* Rata kanan */
-    background-color: #e9ecef; /* Abu-abu muda */
-    color: #333;
+.user-message {
+    align-self: flex-end;
+    background-color: var(--bg-light); /* Lebih konsisten dengan warna tema */
+    color: var(--text-dark);
 }
 
-.ai-message { /* Gaya untuk pesan dari AI */
-    align-self: flex-start; /* Rata kiri */
-    background-color: #007bff; /* Biru */
-    color: white;
+.ai-message {
+    align-self: flex-start;
+    background-color: var(--primary-color);
+    color: var(--text-light);
 }
 
 .chat-footer {
@@ -414,34 +438,35 @@ section {
     display: flex;
     align-items: center;
     border-top: 1px solid #eee;
-    flex-shrink: 0; /* Jangan menyusut */
+    flex-shrink: 0;
 }
 
 .chat-footer input {
-    flex-grow: 1; /* Mengisi ruang yang tersedia */
+    flex-grow: 1;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-right: 10px;
+    font-size: 0.9em;
 }
 
 .chat-footer button {
     padding: 8px 15px;
-    background-color: #007bff;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--text-light);
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .chat-footer button:hover {
-    background-color: #0056b3;
+    background-color: var(--secondary-color);
 }
 
 
 /* --- Animasi --- */
 
-/* Animasi Goyang Ringan (untuk menu mobile saat aktif) */
 @keyframes slightShake {
     0% { transform: translateX(0); }
     25% { transform: translateX(-3px); }
@@ -450,16 +475,14 @@ section {
     100% { transform: translateX(0); }
 }
 
-/* Animasi Fade In dan Geser Ringan dari Bawah (untuk item menu desktop saat load) */
 @keyframes fadeInSlideUp {
-    0% { opacity: 0; transform: translateY(20px); } /* Mulai dari bawah dan tidak terlihat */
-    100% { opacity: 1; transform: translateY(0); } /* Berakhir di posisi normal dan terlihat */
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 
 /* --- Responsivitas dengan Media Queries --- */
 
-/* Untuk layar dengan lebar maksimum 768px (misalnya ponsel dan tablet kecil) */
 @media (max-width: 768px) {
     h1 {
         font-size: 2em;
@@ -471,156 +494,138 @@ section {
 
     .hero-section {
         padding: 80px 20px;
-        flex-direction: column; /* Tumpuk vertikal di mobile */
     }
 
-    .hero-section .container {
-        /* Hapus text-align: left; dari container di hero mobile */
-        text-align: center; /* Pusatkan konten di dalam container hero mobile */
+    .chat-trigger img {
+        width: 45px; /* Sesuaikan ukuran ikon chat AI di mobile */
+        height: 45px;
+    }
+
+    .hero-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .profile-photo {
+        width: 120px;
+        height: 120px;
+    }
+
+    .hero-text {
+        text-align: center;
     }
 
     .hero-section h1 {
-        font-size: 2.5em;
+        font-size: 2em; /* Sesuaikan ukuran font di mobile */
     }
 
     .hero-section p {
         font-size: 1em;
     }
 
-    /* Ukuran gambar chat trigger di mobile */
-    .chat-trigger img {
-        width: 35px;
-        height: 35px;
-    }
-
-    /* Tata letak hero-content di mobile */
-    .hero-content {
-        flex-direction: column; /* Tumpuk vertikal */
-        align-items: center; /* Pusatkan item */
-        gap: 20px; /* Kurangi jarak */
-    }
-
-    /* Ukuran foto profil di mobile */
-    .profile-photo {
-        width: 120px;
-        height: 120px;
-    }
-
-    /* Tata letak teks hero di mobile */
-    .hero-text {
-        text-align: center; /* Pusatkan teks */
-    }
-
-
     /* Navigasi Mobile */
     .main-nav .nav-list {
-        display: none; /* Sembunyikan daftar navigasi di mobile secara default */
-        flex-direction: column; /* Tata letak vertikal saat ditampilkan */
+        display: none;
+        flex-direction: column;
         width: 100%;
-        background-color: #fff;
+        background-color: var(--bg-white);
         position: absolute;
-        top: 60px; /* Sesuaikan dengan tinggi header */
+        top: 80px; /* Sesuaikan dengan tinggi header baru */
         left: 0;
-        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-medium);
         padding: 10px 0;
         z-index: 999;
-        /* Pastikan tidak ada animasi item per item di mobile */
-        animation: none !important;
-        transform: none !important;
-        opacity: 1 !important; /* Pastikan terlihat saat aktif */
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
-     .main-nav .nav-list.active { /* Class 'active' akan ditambahkan oleh JS */
-        display: flex; /* Tampilkan daftar navigasi saat aktif */
-        /* Terapkan animasi goyang pada container saat menu aktif di mobile */
+     .main-nav .nav-list.active {
+        display: flex;
+        opacity: 1;
+        transform: translateY(0);
         animation: slightShake 0.5s ease-in-out;
     }
 
     .main-nav .nav-list li {
-        margin: 0; /* Hapus margin horizontal */
+        margin: 0;
         text-align: center;
-        /* Pastikan item menu terlihat di mobile (override desktop styles) */
-        opacity: 1 !important;
-        transform: none !important;
-        animation: none !important;
+        opacity: 1;
+        transform: none;
+        animation: none;
     }
 
     .main-nav .nav-list a {
-        display: block; /* Buat link mengisi lebar */
-        padding: 10px 20px; /* Padding di dalam item navigasi */
-        border-bottom: 1px solid #eee; /* Garis pemisah antar item */
+        display: block;
+        padding: 12px 20px; /* Padding lebih besar */
+        border-bottom: 1px solid #eee;
     }
 
     .main-nav .nav-list li:last-child a {
-        border-bottom: none; /* Hapus garis pemisah di item terakhir */
+        border-bottom: none;
     }
 
-    .menu-toggle { /* Tampilkan tombol menu di mobile */
+    .menu-toggle {
         display: block;
     }
 
     .header .container {
-        padding: 0 20px; /* Pastikan padding di header mobile */
+        padding: 0 20px;
     }
 
     section {
-        padding: 50px 0; /* Kurangi padding vertikal section */
+        padding: 50px 0;
     }
 
     .project-grid {
-        grid-template-columns: 1fr; /* Jadikan 1 kolom di mobile */
+        grid-template-columns: 1fr;
     }
 
     .project-item img {
-         height: 180px; /* Sesuaikan tinggi gambar proyek di mobile */
+        height: 180px;
     }
 
     .social-links {
-        font-size: 1.8em; /* Sesuaikan ukuran ikon sosial di mobile */
+        font-size: 1.8em;
     }
 
     .social-icon {
-        margin: 0 8px; /* Sesuaikan jarak ikon sosial di mobile */
+        margin: 0 8px;
     }
 
-    /* Sesuaikan ukuran chat window di mobile */
     .chat-window {
-        width: 90%; /* Lebar 90% dari viewport */
-        height: 80%; /* Tinggi 80% dari viewport */
-        bottom: 10px; /* Jarak dari bawah */
-        right: 5%; /* Posisikan di tengah horizontal */
+        width: 90%;
+        height: 80%;
+        bottom: 10px;
+        right: 5%;
         left: 5%;
-        transform-origin: bottom center; /* Animasi dari tengah bawah */
+        transform-origin: bottom center;
     }
 }
 
-/* Untuk layar dengan lebar minimum 769px (misalnya tablet besar dan desktop) */
+/* Untuk layar dengan lebar minimum 769px (desktop) */
 @media (min-width: 769px) {
     .menu-toggle {
-        display: none; /* Sembunyikan tombol menu di desktop */
+        display: none;
     }
 
     .main-nav .nav-list {
-        display: flex !important; /* Pastikan daftar navigasi selalu tampil di desktop */
+        display: flex; /* Pastikan selalu tampil di desktop */
         flex-direction: row;
         position: static;
         box-shadow: none;
         padding: 0;
-        /* Hapus animasi geser dari container di desktop */
-        animation: none !important;
-        transform: none !important;
-        opacity: 1 !important;
+        animation: none;
+        transform: none;
+        opacity: 1;
     }
 
      .main-nav .nav-list li {
-        margin-left: 20px; /* Kembalikan margin horizontal di desktop */
-        /* Terapkan gaya awal sebelum animasi di desktop */
-        opacity: 0;
-        transform: translateY(20px);
-        /* Terapkan animasi fade in dan geser ke atas per item di desktop */
-        animation: fadeInSlideUp 0.6s ease-out forwards; /* Durasi animasi */
-        /* Tambahkan delay untuk animasi satu per satu */
-        /* Delay akan diatur per item menggunakan pseudo-class :nth-child */
+        margin-left: 20px;
+        opacity: 0; /* Reset opacity untuk animasi awal */
+        transform: translateY(20px); /* Reset transform untuk animasi awal */
+        animation: fadeInSlideUp 0.6s ease-out forwards;
     }
 
     /* Atur delay animasi untuk setiap item navigasi di desktop */
@@ -628,34 +633,32 @@ section {
     .main-nav .nav-list li:nth-child(2) { animation-delay: 0.2s; }
     .main-nav .nav-list li:nth-child(3) { animation-delay: 0.3s; }
     .main-nav .nav-list li:nth-child(4) { animation-delay: 0.4s; }
-    /* Tambahkan baris ini jika Anda punya lebih dari 4 item navigasi */
-    /* .main-nav .nav-list li:nth-child(5) { animation-delay: 0.5s; } */
-    /* ... dst ... */
+    /* Tambahkan jika ada item navigasi lebih */
 }
 
 /* Tata letak hero-content di desktop */
 @media (min-width: 769px) {
     .hero-content {
-        flex-direction: row; /* Tata letak horizontal */
-        justify-content: center; /* Pusatkan horizontal */
-        align-items: center; /* Pusatkan vertikal */
-        gap: 50px; /* Jarak lebih besar antara foto dan teks di desktop */
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
     }
 
     .profile-photo {
-        width: 200px; /* Ukuran foto lebih besar di desktop */
+        width: 200px;
         height: 200px;
     }
 
     .hero-text {
-        text-align: left; /* Teks rata kiri di desktop */
+        text-align: left;
     }
 
     .hero-section h1 {
-        font-size: 3em; /* Ukuran teks tetap besar di desktop */
+        font-size: 3em;
     }
 
     .hero-section p {
-        font-size: 1.2em; /* Ukuran teks tetap besar di desktop */
+        font-size: 1.2em;
     }
 }
