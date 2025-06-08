@@ -68,13 +68,15 @@
 
                     addMessage('AI sedang mengetik...', 'ai'); // Indikator mengetik
 
-                    // PENTING: URL INI SEKARANG MENGGUNAKAN ALAMAT RAILWAY ANDA!
-                    fetch('https://gemini-ai-server-production.up.railway.app/chat', { // <<< PASTIKAN URL INI BENAR
+                    // Tambahkan instruksi bahasa ke pesan pengguna
+                    const promptInIndonesian = `Tolong jawab dalam Bahasa Indonesia: ${userMessage}`;
+
+                    fetch('https://gemini-ai-server-production.up.railway.app/chat', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ message: userMessage }),
+                        body: JSON.stringify({ message: promptInIndonesian }), // Kirim prompt yang sudah dimodifikasi
                     })
                     .then(response => {
                         const typingMessage = chatBody.querySelector('.ai-message:last-child');
