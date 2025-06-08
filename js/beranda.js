@@ -68,7 +68,7 @@
 
                     addMessage('AI sedang mengetik...', 'ai'); // Indikator mengetik
 
-                    // PENTING: URL INI HARUS MENGGUNAKAN ALAMAT RAILWAY ANDA!
+                    // PENTING: URL INI SEKARANG MENGGUNAKAN ALAMAT RAILWAY ANDA!
                     fetch('https://gemini-ai-server-production.up.railway.app/chat', { // <<< PASTIKAN URL INI BENAR
                         method: 'POST',
                         headers: {
