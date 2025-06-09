@@ -81,39 +81,6 @@ p {
     font-size: 1.2em;
 }
 
-.main-nav .nav-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-.main-nav .nav-list li {
-    margin-left: 20px;
-}
-
-.main-nav .nav-list a {
-    color: var(--text-dark);
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease, transform 0.2s ease;
-}
-
-.main-nav .nav-list a:hover {
-    color: var(--primary-color);
-    transform: translateY(-2px);
-}
-
-.menu-toggle {
-    display: none; /* Default hidden for desktop */
-    background: none;
-    border: none;
-    font-size: 1.8em;
-    cursor: pointer;
-    color: var(--text-dark);
-    transition: transform 0.3s ease;
-}
-
 /* Section Pilihan Kategori */
 .categories-section {
     padding: 80px 0;
@@ -216,47 +183,6 @@ p {
         flex-direction: row; /* Tetap satu baris */
         justify-content: space-between;
         padding: 0 20px;
-    }
-
-    .main-nav .nav-list {
-        display: none; /* Sembunyikan nav list secara default */
-        flex-direction: column;
-        width: 100%;
-        background-color: var(--bg-white);
-        position: absolute;
-        top: 60px; /* Sesuaikan dengan tinggi header */
-        left: 0;
-        box-shadow: var(--shadow-medium);
-        padding: 10px 0;
-        z-index: 999;
-        opacity: 0;
-        transform: translateY(-20px);
-        transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-
-    .main-nav .nav-list.active {
-        display: flex; /* Tampilkan saat aktif */
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    .main-nav .nav-list li {
-        margin: 0;
-        text-align: center;
-    }
-
-    .main-nav .nav-list a {
-        display: block;
-        padding: 12px 20px;
-        border-bottom: 1px solid #eee;
-    }
-
-    .main-nav .nav-list li:last-child a {
-        border-bottom: none;
-    }
-
-    .menu-toggle {
-        display: block; /* Tampilkan tombol toggle */
     }
 
     .category-grid {
