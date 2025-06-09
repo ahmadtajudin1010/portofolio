@@ -88,7 +88,7 @@ const cancelEditBtn = document.getElementById('cancel-edit-btn');
 
 // Elemen Ubah Password
 const changePasswordBtn = document.getElementById('change-password-btn');
-const changePasswordForm = document = document.getElementById('change-password-form');
+const changePasswordForm = document.getElementById('change-password-form'); // Perbaikan di sini!
 const currentPasswordReauthInput = document.getElementById('current-password-reauth');
 const newPasswordInput = document.getElementById('new-password');
 const confirmNewPasswordInput = document.getElementById('confirm-new-password');
