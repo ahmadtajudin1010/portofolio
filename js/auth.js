@@ -51,6 +51,7 @@ const updateAuthButton = (user) => {
             // Pengguna login: Tampilkan email atau "Logout"
             authButton.textContent = `Logout (${user.email})`;
             authButton.onclick = async () => {
+                console.log('Logout button clicked.'); // Log untuk debugging
                 try {
                     await signOut(auth);
                     console.log('Pengguna berhasil logout');
@@ -64,6 +65,7 @@ const updateAuthButton = (user) => {
             // Pengguna belum login: Tampilkan "Login / Daftar"
             authButton.textContent = 'Login / Daftar';
             authButton.onclick = () => {
+                console.log('Login / Daftar button clicked. Opening login modal.'); // Log untuk debugging
                 loginModal.classList.add('open'); // Buka modal login saat diklik
             };
         }
@@ -72,33 +74,19 @@ const updateAuthButton = (user) => {
 
 // Listener untuk memantau perubahan status autentikasi
 onAuthStateChanged(auth, (user) => {
+    console.log('onAuthStateChanged triggered. User:', user ? user.email : 'null'); // Log untuk debugging
     updateAuthButton(user);
     if (user) {
-        console.log('Pengguna sudah login:', user.email);
         // Sembunyikan modal jika pengguna login saat modal terbuka
         loginModal.classList.remove('open');
         registerModal.classList.remove('open');
-    } else {
-        console.log('Pengguna belum login.');
     }
 });
-
-
-// --- Event Listener untuk Membuka Modal ---
-if (authButton) { // Pastikan elemen ada sebelum menambahkan listener
-    authButton.addEventListener('click', () => {
-        // Jika teks tombol adalah "Login / Daftar", buka modal login
-        if (authButton.textContent === 'Login / Daftar') {
-            loginModal.classList.add('open');
-        } 
-        // Jika teks tombol adalah "Logout (email@domain.com)", fungsi logout sudah ditangani di updateAuthButton
-    });
-}
-
 
 // --- Event Listener untuk Menutup Modal ---
 closeButtons.forEach(button => {
     button.addEventListener('click', () => {
+        console.log('Close button clicked.'); // Log untuk debugging
         loginModal.classList.remove('open');
         registerModal.classList.remove('open');
         authMessage.textContent = ''; // Bersihkan pesan
@@ -111,11 +99,13 @@ closeButtons.forEach(button => {
 // Menutup modal jika klik di luar area konten modal
 window.addEventListener('click', (event) => {
     if (event.target === loginModal) {
+        console.log('Clicked outside login modal. Closing.'); // Log untuk debugging
         loginModal.classList.remove('open');
         authMessage.textContent = ''; // Bersihkan pesan
         authForm.reset(); // Reset form
     }
     if (event.target === registerModal) {
+        console.log('Clicked outside register modal. Closing.'); // Log untuk debugging
         registerModal.classList.remove('open');
         registerMessage.textContent = ''; // Bersihkan pesan
         registerForm.reset(); // Reset form
@@ -125,6 +115,7 @@ window.addEventListener('click', (event) => {
 // --- Beralih antara Login dan Daftar ---
 if (switchToRegisterLink) {
     switchToRegisterLink.addEventListener('click', () => {
+        console.log('Switch to register link clicked.'); // Log untuk debugging
         loginModal.classList.remove('open');
         registerModal.classList.add('open');
         authMessage.textContent = ''; // Bersihkan pesan login
@@ -134,6 +125,7 @@ if (switchToRegisterLink) {
 
 if (switchToLoginLink) {
     switchToLoginLink.addEventListener('click', () => {
+        console.log('Switch to login link clicked.'); // Log untuk debugging
         registerModal.classList.remove('open');
         loginModal.classList.add('open');
         registerMessage.textContent = ''; // Bersihkan pesan daftar
