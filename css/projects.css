@@ -81,6 +81,21 @@ p {
     font-size: 1.2em;
 }
 
+/* Navigasi utama, tombol toggle, dan daftar navigasi untuk mobile */
+.main-nav .nav-list { /* Ini seharusnya tidak ada di projects.html lagi */
+    display: none;
+}
+
+.menu-toggle {
+    display: none; /* Sembunyikan secara default untuk desktop */
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    cursor: pointer;
+    color: var(--text-dark);
+    transition: transform 0.3s ease;
+}
+
 /* Section Pilihan Kategori */
 .categories-section {
     padding: 80px 0;
@@ -185,6 +200,19 @@ p {
         padding: 0 20px;
     }
 
+    /* Tampilkan tombol toggle hanya di mobile */
+    .menu-toggle {
+        display: block;
+    }
+
+    .back-to-home {
+        font-size: 0.9em;
+    }
+
+    .back-to-home i {
+        font-size: 1em;
+    }
+
     .category-grid {
         grid-template-columns: 1fr; /* Satu kolom di mobile */
         padding: 0 20px;
@@ -200,13 +228,5 @@ p {
 
     .category-info p {
         font-size: 0.9em;
-    }
-    
-    .back-to-home {
-        font-size: 0.9em;
-    }
-
-    .back-to-home i {
-        font-size: 1em;
     }
 }
