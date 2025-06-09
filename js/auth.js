@@ -1,6 +1,6 @@
-// Konfigurasi Firebase Anda (SUDAH DIGANTI DENGAN KONFIGURASI DARI FIREBASE CONSOLE ANDA)
+// Konfigurasi Firebase Anda (PASTIKAN UNTUK MENGGANTI INI DENGAN KONFIGURASI DARI FIREBASE CONSOLE ANDA)
 const firebaseConfig = {
-    apiKey: "AIzaSyBBBG_rOV2fHwvzbx_CCJLnC-6JB38hMuQ",
+    apiKey: "AIzaSyBBBG_rOV2fHwvzbx_CCJLnC-6JB38hMuQ", // <--- PENTING: GANTI INI DENGAN API KEY ANDA YANG SEBENARNYA!
     authDomain: "firebas-25218.firebaseapp.com",
     projectId: "firebas-25218",
     storageBucket: "firebas-25218.firebasestorage.app",
@@ -17,10 +17,10 @@ const firebaseConfig = {
 // Inisialisasi Firebase
 // Impor fungsi yang diperlukan dari Firebase SDK
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
+import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
     signOut,
     onAuthStateChanged,
     signInWithCustomToken, // Import untuk token kustom
@@ -31,10 +31,10 @@ import {
     EmailAuthProvider, // Untuk membuat kredensial email
     deleteUser // Untuk menghapus akun
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {
-    getFirestore,
-    doc,
-    setDoc,
+import { 
+    getFirestore, 
+    doc, 
+    setDoc, 
     getDoc,
     deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -245,6 +245,16 @@ window.addEventListener('click', (event) => {
     }
 });
 
+// --- PENTING: Mencegah penutupan modal saat mengklik di dalam konten modal ---
+// Tambahkan event listener ke setiap konten modal
+const modalContents = document.querySelectorAll('.auth-modal-content');
+modalContents.forEach(content => {
+    content.addEventListener('click', (event) => {
+        event.stopPropagation(); // Mencegah klik di dalam konten modal menyebar ke window
+    });
+});
+
+
 // --- Beralih antara Login dan Daftar ---
 if (switchToRegisterLink) {
     switchToRegisterLink.addEventListener('click', () => {
@@ -297,6 +307,9 @@ if (authForm) {
                     break;
                 case 'auth/too-many-requests':
                     authMessage.textContent = 'Terlalu banyak percobaan login. Coba lagi nanti.';
+                    break;
+                case 'auth/api-key-not-valid': // Tambahkan penanganan eksplisit untuk error API Key
+                    authMessage.textContent = 'Konfigurasi Firebase API Key tidak valid. Silakan periksa konsol Firebase Anda.';
                     break;
                 default:
                     authMessage.textContent = 'Login gagal. Silakan coba lagi.';
@@ -370,6 +383,9 @@ if (registerForm) {
                     break;
                 case 'auth/weak-password':
                     registerMessage.textContent = 'Password terlalu lemah (minimal 6 karakter).';
+                    break;
+                case 'auth/api-key-not-valid': // Tambahkan penanganan eksplisit untuk error API Key
+                    registerMessage.textContent = 'Konfigurasi Firebase API Key tidak valid. Silakan periksa konsol Firebase Anda.';
                     break;
                 default:
                     registerMessage.textContent = 'Pendaftaran gagal. Silakan coba lagi.';
