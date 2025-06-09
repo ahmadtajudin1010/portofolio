@@ -1,7 +1,7 @@
 // Konfigurasi Firebase Anda (PASTIKAN UNTUK MENGGANTI INI DENGAN KONFIGURASI DARI FIREBASE CONSOLE ANDA)
 const firebaseConfig = {
     // === PENTING: PASTIKAN NILAI apiKey INI ADALAH KUNCI API ASLI DARI PROYEK FIREBASE ANDA ===
-    apiKey: "AIzaSyDKg-M8ZIZCXuv_emmNdVsrBfa-KhxleOg", // <--- KUNCI API BARU DARI ANDA!
+    apiKey: "AIzaSyBBBG_rOV2fHwvzbx_CCJLnC-6JB38hMuM", // <--- INI KUNCI API YANG BENAR DAN ASLI DARI FIREBASE CONSOLE ANDA!
     authDomain: "firebas-25218.firebaseapp.com",
     projectId: "firebas-25218",
     storageBucket: "firebas-25218.firebasestorage.app",
@@ -88,7 +88,7 @@ const cancelEditBtn = document.getElementById('cancel-edit-btn');
 
 // Elemen Ubah Password
 const changePasswordBtn = document.getElementById('change-password-btn');
-const changePasswordForm = document.getElementById('change-password-form');
+const changePasswordForm = document = document.getElementById('change-password-form');
 const currentPasswordReauthInput = document.getElementById('current-password-reauth');
 const newPasswordInput = document.getElementById('new-password');
 const confirmNewPasswordInput = document.getElementById('confirm-new-password');
