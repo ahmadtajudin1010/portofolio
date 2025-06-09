@@ -121,9 +121,13 @@ const updateAuthButtonsVisibility = async (user) => {
             const docSnap = await getDoc(userProfileRef);
             if (docSnap.exists()) {
                 userRole = docSnap.data().userType === 'penjual' ? 'Penjual' : 'Pembeli';
+            } else {
+                console.warn(`Dokumen profil untuk user ${userId} tidak ditemukan di Firestore.`);
+                userRole = 'Tidak Ditemukan (Data Profil Kosong)'; // Pesan lebih spesifik
             }
         } catch (error) {
-            console.error("Error fetching user role:", error);
+            console.error("Error fetching user role from Firestore:", error);
+            userRole = 'Error (Lihat Konsol)'; // Pesan lebih informatif
         }
         authButtonProfile.textContent = `Profil Saya (${userRole})`;
 
@@ -149,11 +153,11 @@ const loadProfileData = async (user) => {
                 const data = docSnap.data();
                 profileRoleSpan.textContent = data.userType === 'penjual' ? 'Penjual' : 'Pembeli';
             } else {
-                profileRoleSpan.textContent = 'Tidak Ditemukan';
+                profileRoleSpan.textContent = 'Tidak Ditemukan (Data Profil Kosong)'; // Pesan lebih spesifik
             }
         } catch (error) {
-            console.error("Error loading profile data:", error);
-            profileRoleSpan.textContent = 'Error';
+            console.error("Error loading profile data from Firestore:", error); // Pesan error lebih jelas
+            profileRoleSpan.textContent = 'Error (Lihat Konsol)'; // Pesan lebih informatif
         }
     }
 };
