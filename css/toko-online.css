@@ -319,11 +319,11 @@ p {
     }
     .close-button {
         font-size: 24px;
-        top: 8px; /* Sesuaikan posisi X */
-        right: 12px;
-        width: 28px; /* Lebih besar area sentuh */
-        height: 28px;
-        line-height: 28px;
+        top: 10px;
+        right: 15px;
+        width: 24px; /* Sesuaikan ukuran area klik untuk mobile */
+        height: 24px;
+        line-height: 24px;
     }
     .auth-message {
         font-size: 0.8em;
@@ -332,5 +332,192 @@ p {
     .auth-switch {
         font-size: 0.8em;
         margin-top: 15px;
+    }
+}
+
+/* ----------- Gaya untuk Modal Otentikasi ----------- */
+.auth-modal {
+    /* Pastikan ini disembunyikan secara default dan hanya muncul saat 'open' */
+    display: none; /* Default: Sembunyi */
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center; /* Pusatkan secara horizontal */
+    align-items: center; /* Pusatkan secara vertikal */
+    /* Tambahkan transisi untuk efek fade */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.auth-modal.open {
+    display: flex; /* Ketika ada kelas 'open', tampilkan sebagai flexbox */
+    opacity: 1;
+    visibility: visible;
+}
+
+.auth-modal-content {
+    background-color: var(--bg-white);
+    margin: auto; /* Untuk pemusatan vertikal/horizontal */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    width: 90%; /* Lebar modal default */
+    max-width: 450px; /* Lebar maksimal */
+    text-align: center;
+    /* Animasi muncul dari dalam (scale) */
+    transform: scale(0.9);
+    transition: transform 0.3s ease-out; /* Transisi untuk scale */
+}
+
+.auth-modal.open .auth-modal-content {
+    transform: scale(1); /* Kembali ke ukuran normal saat terbuka */
+}
+
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 15px; /* Jarak dari atas */
+    right: 20px; /* Jarak dari kanan */
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    display: flex; /* Gunakan flex untuk memusatkan 'X' di dalam area */
+    justify-content: center;
+    align-items: center;
+    z-index: 2001; /* Pastikan di atas konten modal lainnya jika ada tumpang tindih */
+    width: 35px; /* Berikan lebar dan tinggi agar area klik lebih besar */
+    height: 35px;
+    border-radius: 50%; /* Membuatnya lingkaran */
+    background-color: rgba(255, 255, 255, 0.2); /* Sedikit latar belakang transparan */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: var(--text-dark);
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.auth-modal-content h2 {
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 2em;
+}
+
+.auth-modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.auth-modal-content input[type="email"],
+.auth-modal-content input[type="password"] {
+    width: calc(100% - 20px); /* Kurangi padding dari lebar total */
+    padding: 12px 10px;
+    margin: 0 auto; /* Tengah input */
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-modal-content input[type="email"]:focus,
+.auth-modal-content input[type="password"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.auth-modal-content button[type="submit"] {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+}
+
+.auth-modal-content button[type="submit"]:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.auth-message {
+    color: red; /* Warna merah untuk pesan error */
+    margin-top: 15px;
+    font-size: 0.9em;
+    height: 1.2em; /* Tinggi tetap untuk menghindari CLS */
+}
+
+.auth-message.success {
+    color: green; /* Warna hijau untuk pesan sukses */
+}
+
+.auth-switch {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.auth-switch span {
+    color: var(--primary-color);
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.auth-switch span:hover {
+    color: var(--secondary-color);
+}
+
+/* Responsivitas untuk modal */
+@media (max-width: 500px) {
+    .auth-modal-content {
+        width: 95%; /* Lebih lebar di layar sangat kecil */
+        padding: 20px;
+    }
+    .auth-modal-content h2 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+    .auth-modal-content input,
+    .auth-modal-content button[type="submit"] {
+        font-size: 0.95em;
+        padding: 10px;
+    }
+    .close-button {
+        font-size: 24px;
+        top: 10px;
+        right: 15px;
+        width: 28px; /* Sesuaikan ukuran area klik untuk mobile */
+        height: 28px;
+        line-height: 28px; /* Menggunakan line-height untuk memusatkan 'X' */
     }
 }
