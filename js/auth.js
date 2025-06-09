@@ -30,14 +30,15 @@ import {
     updatePassword, // Untuk mengubah password
     reauthenticateWithCredential, // Untuk re-autentikasi
     EmailAuthProvider, // Untuk membuat kredensial email
-    deleteUser // Untuk menghapus akun
+    deleteUser, // Untuk menghapus akun
+    GoogleAuthProvider, // Import untuk Google Auth Provider
+    signInWithPopup // Import untuk signInWithPopup (login dengan popup)
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { 
     getFirestore, 
     doc, 
     setDoc, 
-    getDoc,
-    deleteDoc
+    getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -88,7 +89,7 @@ const cancelEditBtn = document.getElementById('cancel-edit-btn');
 
 // Elemen Ubah Password
 const changePasswordBtn = document.getElementById('change-password-btn');
-const changePasswordForm = document.getElementById('change-password-form'); // Perbaikan di sini!
+const changePasswordForm = document.getElementById('change-password-form');
 const currentPasswordReauthInput = document.getElementById('current-password-reauth');
 const newPasswordInput = document.getElementById('new-password');
 const confirmNewPasswordInput = document.getElementById('confirm-new-password');
@@ -102,6 +103,9 @@ const deletePasswordReauthInput = document.getElementById('delete-password-reaut
 const confirmDeleteAccountBtn = document.getElementById('confirm-delete-account-btn');
 const deleteAccountMessage = document.getElementById('delete-account-message');
 const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+
+// --- Elemen Baru untuk Login Google ---
+const signInWithGoogleBtn = document.getElementById('sign-in-with-google-btn'); // ID tombol untuk login Google
 
 
 // --- Fungsi untuk Mengatur Tampilan Tombol Auth di Header ---
@@ -280,7 +284,7 @@ if (switchToLoginLink) {
 }
 
 
-// --- Penanganan Form Login ---
+// --- Penanganan Form Login Email/Password ---
 if (authForm) {
     authForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -313,7 +317,7 @@ if (authForm) {
                 case 'auth/too-many-requests':
                     authMessage.textContent = 'Terlalu banyak percobaan login. Coba lagi nanti.';
                     break;
-                case 'auth/api-key-not-valid': // Tambahkan penanganan eksplisit untuk error API Key
+                case 'auth/api-key-not-valid':
                     authMessage.textContent = 'Konfigurasi Firebase API Key tidak valid. Silakan periksa konsol Firebase Anda.';
                     break;
                 default:
@@ -324,7 +328,7 @@ if (authForm) {
     });
 }
 
-// --- Penanganan Form Daftar ---
+// --- Penanganan Form Daftar Email/Password ---
 if (registerForm) {
     registerForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -348,7 +352,7 @@ if (registerForm) {
             return;
         }
 
-        let userType = 'pembeli';
+        let userType = 'pembeli'; // Default role for new email/password registration
         if (rolePenjual.checked) {
             userType = 'penjual';
         } else if (rolePembeli.checked) {
@@ -389,7 +393,7 @@ if (registerForm) {
                 case 'auth/weak-password':
                     registerMessage.textContent = 'Password terlalu lemah (minimal 6 karakter).';
                     break;
-                case 'auth/api-key-not-valid': // Tambahkan penanganan eksplisit untuk error API Key
+                case 'auth/api-key-not-valid':
                     registerMessage.textContent = 'Konfigurasi Firebase API Key tidak valid. Silakan periksa konsol Firebase Anda.';
                     break;
                 default:
@@ -400,10 +404,70 @@ if (registerForm) {
     });
 }
 
+// --- Penanganan Login dengan Google ---
+if (signInWithGoogleBtn) {
+    signInWithGoogleBtn.addEventListener('click', async () => {
+        authMessage.textContent = ''; // Bersihkan pesan error sebelumnya
+        const provider = new GoogleAuthProvider();
+
+        try {
+            const userCredential = await signInWithPopup(auth, provider);
+            const user = userCredential.user;
+            const userId = user.uid;
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const userProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profiles`, userId);
+
+            // Periksa apakah pengguna baru atau sudah ada
+            const docSnap = await getDoc(userProfileRef);
+            if (!docSnap.exists()) {
+                // Pengguna baru, simpan profil dengan peran default (misal: 'pembeli')
+                await setDoc(userProfileRef, {
+                    userType: 'pembeli', // Tetapkan 'pembeli' sebagai peran default untuk login Google baru
+                    email: user.email,
+                    displayName: user.displayName, // Simpan nama tampilan dari Google
+                    photoURL: user.photoURL, // Simpan URL foto profil dari Google
+                    createdAt: new Date()
+                });
+                console.log('Profil pengguna Google baru disimpan ke Firestore.');
+            } else {
+                console.log('Profil pengguna Google sudah ada di Firestore.');
+            }
+
+            authMessage.textContent = 'Login dengan Google berhasil!';
+            authMessage.classList.remove('error');
+            authMessage.classList.add('success');
+            setTimeout(() => {
+                loginModal.classList.remove('open');
+            }, 1500);
+        } catch (error) {
+            console.error('Error saat login dengan Google:', error.code, error.message);
+            authMessage.classList.remove('success');
+            authMessage.classList.add('error');
+            switch (error.code) {
+                case 'auth/popup-closed-by-user':
+                    authMessage.textContent = 'Login Google dibatalkan.';
+                    break;
+                case 'auth/cancelled-popup-request':
+                    authMessage.textContent = 'Permintaan login Google sudah ada yang tertunda.';
+                    break;
+                case 'auth/account-exists-with-different-credential':
+                    authMessage.textContent = 'Akun dengan email ini sudah ada dengan kredensial berbeda.';
+                    break;
+                default:
+                    authMessage.textContent = 'Login Google gagal. Silakan coba lagi.';
+                    break;
+            }
+        }
+    });
+}
+
+
 // --- Penanganan Tombol di Header ---
 if (authButtonLogin) {
     authButtonLogin.addEventListener('click', () => {
         loginModal.classList.add('open');
+        authMessage.textContent = ''; // Bersihkan pesan saat modal dibuka
+        authForm.reset();
     });
 }
 
