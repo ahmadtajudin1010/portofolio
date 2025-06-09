@@ -19,7 +19,6 @@
                 </a>
             </div>
             <nav class="main-nav">
-                <!-- Tombol menu toggle telah dihapus -->
                 <!-- Tombol untuk membuka modal login/daftar -->
                 <button id="auth-button" class="btn-auth">Login / Daftar</button>
             </nav>
@@ -145,8 +144,18 @@
                     autocomplete="new-password">
                 <input type="password" id="register-confirm-password" placeholder="Konfirmasi Password" required
                     autocomplete="new-password">
-                <!-- Anda bisa menambahkan input untuk 'Pembeli' atau 'Penjual' di sini nanti,
-                     tapi untuk sekarang, kita fokus pada pendaftaran dasar. -->
+
+                <!-- Pilihan Penjual atau Pembeli -->
+                <div class="user-type-selection">
+                    <label>Daftar sebagai:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="role-pembeli" name="userType" value="pembeli" checked>
+                        <label for="role-pembeli">Pembeli</label>
+                        <input type="radio" id="role-penjual" name="userType" value="penjual">
+                        <label for="role-penjual">Penjual</label>
+                    </div>
+                </div>
+
                 <button type="submit" id="register-submit-btn">Daftar</button>
             </form>
             <p id="register-message" class="auth-message"></p>

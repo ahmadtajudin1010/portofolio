@@ -305,16 +305,16 @@ p {
 
     /* Responsivitas untuk modal di mobile */
     .auth-modal-content {
-        width: 90%; /* Pastikan modal mengambil lebih banyak lebar di mobile */
+        width: 95%; /* Pastikan modal mengambil lebih banyak lebar di mobile */
         padding: 20px;
     }
     .auth-modal-content h2 {
-        font-size: 1.5em; /* Ukuran judul modal di mobile */
-        margin-bottom: 15px;
+        font-size: 1.8em;
+        margin-bottom: 20px;
     }
     .auth-modal-content input,
     .auth-modal-content button[type="submit"] {
-        font-size: 0.9em;
+        font-size: 0.95em;
         padding: 10px;
     }
     .close-button {
@@ -340,15 +340,18 @@ p {
     /* Pastikan ini disembunyikan secara default dan hanya muncul saat 'open' */
     display: none; /* Default: Sembunyi */
     position: fixed;
-    z-index: 2000;
+    z-index: 9999; /* Z-index yang sangat tinggi untuk memastikan di atas segalanya */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.6);
-    justify-content: center; /* Pusatkan secara horizontal */
-    align-items: center; /* Pusatkan secara vertikal */
+    /* Tambahkan !important untuk memastikan aturan ini tidak ditimpa */
+    overflow: auto !important; 
+    background-color: rgba(0,0,0,0.6) !important;
+    /* Gunakan flex secara default di sini, tetapi atur opacity dan visibility untuk menyembunyikan */
+    display: flex; /* Selalu flex, agar transisi lebih mulus */
+    justify-content: center !important; /* Pusatkan secara horizontal */
+    align-items: center !important; /* Pusatkan secara vertikal */
     /* Tambahkan transisi untuk efek fade */
     opacity: 0;
     visibility: hidden;
@@ -356,9 +359,9 @@ p {
 }
 
 .auth-modal.open {
-    display: flex; /* Ketika ada kelas 'open', tampilkan sebagai flexbox */
-    opacity: 1;
-    visibility: visible;
+    display: flex !important; /* Ketika ada kelas 'open', tampilkan sebagai flexbox */
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .auth-modal-content {
@@ -404,7 +407,7 @@ p {
     display: flex; /* Gunakan flex untuk memusatkan 'X' di dalam area */
     justify-content: center;
     align-items: center;
-    z-index: 2001; /* Pastikan di atas konten modal lainnya jika ada tumpang tindih */
+    z-index: 9999; /* Pastikan di atas konten modal lainnya jika ada tumpang tindih */
     width: 35px; /* Berikan lebar dan tinggi agar area klik lebih besar */
     height: 35px;
     border-radius: 50%; /* Membuatnya lingkaran */
@@ -497,6 +500,43 @@ p {
     color: var(--secondary-color);
 }
 
+/* Tambahan gaya untuk pilihan peran */
+.user-type-selection {
+    text-align: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 0.95em;
+    color: var(--text-dark);
+}
+
+.user-type-selection label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.user-type-selection .radio-group {
+    display: flex;
+    justify-content: center; /* Pusatkan radio button */
+    gap: 20px; /* Jarak antara radio button */
+    padding: 5px 0;
+}
+
+.user-type-selection input[type="radio"] {
+    margin-right: 5px;
+    transform: scale(1.1); /* Sedikit membesarkan radio button */
+    cursor: pointer;
+}
+
+.user-type-selection label[for="role-pembeli"],
+.user-type-selection label[for="role-penjual"] {
+    font-weight: normal; /* Override bold dari label utama */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 /* Responsivitas untuk modal */
 @media (max-width: 500px) {
     .auth-modal-content {
@@ -518,6 +558,19 @@ p {
         right: 15px;
         width: 28px; /* Sesuaikan ukuran area klik untuk mobile */
         height: 28px;
-        line-height: 28px; /* Menggunakan line-height untuk memusatkan 'X' */
+        line-height: 28px;
+    }
+    .auth-message {
+        font-size: 0.8em;
+        margin-top: 10px;
+    }
+    .auth-switch {
+        font-size: 0.8em;
+        margin-top: 15px;
+    }
+    .user-type-selection .radio-group {
+        flex-direction: column; /* Susun vertikal di mobile */
+        gap: 10px;
+        align-items: flex-start; /* Ratakan kiri */
     }
 }

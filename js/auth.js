@@ -1,6 +1,6 @@
 // Konfigurasi Firebase Anda (SUDAH DIGANTI DENGAN KONFIGURASI DARI FIREBASE CONSOLE ANDA)
 const firebaseConfig = {
-    apiKey: "AIzaSyBBBG_rOV2fHwvzbx_CCJLnC-6JB38hMuM",
+    apiKey: "AIzaSyBBBG_rOV2fHwvzbx_CCJLnC-6JB38hMuQ",
     authDomain: "firebas-25218.firebaseapp.com",
     projectId: "firebas-25218",
     storageBucket: "firebas-25218.firebasestorage.app",
@@ -8,6 +8,11 @@ const firebaseConfig = {
     appId: "1:1067329309535:web:a1d24343fc0dee741fc4ea",
     measurementId: "G-TXT7HPGHRT" // Measurement ID ini opsional untuk Analytics
 };
+
+// Global variables provided by Canvas environment
+// __app_id: The current app ID (string)
+// __firebase_config: Firebase config (stringified JSON)
+// __initial_auth_token: Firebase custom auth token (string)
 
 // Inisialisasi Firebase
 // Impor fungsi yang diperlukan dari Firebase SDK
@@ -17,12 +22,23 @@ import {
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
     signOut,
-    onAuthStateChanged 
+    onAuthStateChanged,
+    signInWithCustomToken, // Import untuk token kustom
+    signInAnonymously // Import untuk login anonim
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { 
+    getFirestore, 
+    doc, 
+    setDoc, 
+    getDoc 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 
 // Inisialisasi aplikasi Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app); // Dapatkan instance autentikasi Firebase
+const db = getFirestore(app); // Dapatkan instance Firestore
+
 
 // --- Elemen Modal dan Form ---
 const authButton = document.getElementById('auth-button');
@@ -43,13 +59,32 @@ const registerConfirmPasswordInput = document.getElementById('register-confirm-p
 const registerMessage = document.getElementById('register-message');
 const switchToLoginLink = document.getElementById('switch-to-login');
 
+// Mendapatkan elemen radio button untuk peran
+const rolePembeli = document.getElementById('role-pembeli');
+const rolePenjual = document.getElementById('role-penjual');
+
+
 // --- Fungsi untuk Mengatur Status Tombol Auth di Header ---
 // Mengganti teks tombol header berdasarkan status login
-const updateAuthButton = (user) => {
+const updateAuthButton = async (user) => {
     if (authButton) { // Pastikan tombol ada
         if (user) {
-            // Pengguna login: Tampilkan email atau "Logout"
-            authButton.textContent = `Logout (${user.email})`;
+            // Pengguna login: Ambil peran dari Firestore
+            const userId = user.uid;
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const userProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profiles`, userId);
+            
+            let userRole = 'Pengguna'; // Default role
+            try {
+                const docSnap = await getDoc(userProfileRef);
+                if (docSnap.exists()) {
+                    userRole = docSnap.data().userType === 'penjual' ? 'Penjual' : 'Pembeli';
+                }
+            } catch (error) {
+                console.error("Error fetching user role:", error);
+            }
+
+            authButton.textContent = `Logout (${userRole})`; // Tampilkan peran pengguna
             authButton.onclick = async () => {
                 console.log('Logout button clicked.'); // Log untuk debugging
                 try {
@@ -72,9 +107,27 @@ const updateAuthButton = (user) => {
     }
 };
 
+// Inisialisasi otentikasi dengan custom token atau anonim
+const initializeAuth = async () => {
+    try {
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            await signInWithCustomToken(auth, __initial_auth_token);
+            console.log('Signed in with custom token.');
+        } else {
+            await signInAnonymously(auth);
+            console.log('Signed in anonymously.');
+        }
+    } catch (error) {
+        console.error('Error during initial Firebase authentication:', error);
+    }
+};
+
+// Panggil inisialisasi otentikasi saat script dimuat
+initializeAuth();
+
 // Listener untuk memantau perubahan status autentikasi
 onAuthStateChanged(auth, (user) => {
-    console.log('onAuthStateChanged triggered. User:', user ? user.email : 'null'); // Log untuk debugging
+    console.log('onAuthStateChanged triggered. User:', user ? user.email || user.uid : 'null'); // Log untuk debugging
     updateAuthButton(user);
     if (user) {
         // Sembunyikan modal jika pengguna login saat modal terbuka
@@ -199,8 +252,28 @@ if (registerForm) {
             return;
         }
 
+        // Ambil nilai peran pengguna yang dipilih
+        let userType = 'pembeli'; // Default
+        if (rolePenjual.checked) {
+            userType = 'penjual';
+        } else if (rolePembeli.checked) {
+            userType = 'pembeli';
+        }
+
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            const userId = user.uid;
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+            // Simpan peran pengguna ke Firestore
+            // Path: /artifacts/{appId}/users/{userId}/profiles/{userId}
+            await setDoc(doc(db, `artifacts/${appId}/users/${userId}/profiles`, userId), {
+                userType: userType,
+                email: user.email,
+                createdAt: new Date()
+            });
+
             registerMessage.textContent = 'Pendaftaran berhasil! Silakan login.';
             registerMessage.classList.remove('error');
             registerMessage.classList.add('success');
