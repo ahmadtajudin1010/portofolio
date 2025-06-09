@@ -88,13 +88,13 @@ p {
     font-size: 1.2em;
 }
 
-/* Penyesuaian untuk main-nav dan menu-toggle */
+/* Penyesuaian untuk main-nav dan tombol autentikasi */
 .main-nav {
-    position: relative; /* Penting untuk z-index anaknya */
-    z-index: 1100; /* Lebih tinggi dari elemen header lainnya */
+    display: flex; /* Mengatur tombol login/profil/logout berdampingan */
+    gap: 10px; /* Jarak antara tombol */
+    position: relative;
+    z-index: 1100;
 }
-
-/* Aturan .menu-toggle telah dihapus */
 
 .btn-auth {
     background-color: var(--primary-color);
@@ -105,13 +105,39 @@ p {
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    position: relative; /* Pastikan z-index berfungsi pada tombol itu sendiri */
-    z-index: 1200; /* Sangat tinggi untuk memastikan bisa diklik, bahkan di atas main-nav */
+    position: relative;
+    z-index: 1200;
 }
 
 .btn-auth:hover {
     background-color: var(--secondary-color);
     transform: translateY(-2px);
+}
+
+.btn-logout {
+    background-color: #dc3545; /* Merah untuk logout */
+}
+
+.btn-logout:hover {
+    background-color: #c82333;
+}
+
+.btn-delete {
+    background-color: #dc3545; /* Merah untuk hapus akun */
+    margin-top: 15px; /* Jarak dari tombol lain */
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+.btn-cancel {
+    background-color: #6c757d; /* Abu-abu untuk batal */
+    margin-left: 10px;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268;
 }
 
 /* Section Daftar Produk Toko Online (konten utama) */
@@ -271,7 +297,14 @@ p {
         font-size: 1em;
     }
 
-    /* Aturan .menu-toggle telah dihapus di sini */
+    .main-nav {
+        gap: 5px; /* Kurangi jarak antar tombol di mobile */
+    }
+
+    .btn-auth {
+        padding: 6px 10px; /* Padding lebih kecil untuk tombol di mobile */
+        font-size: 0.9em;
+    }
 
     .product-grid {
         /* Untuk mobile, gunakan kolom lebih sedikit atau satu kolom */
@@ -305,16 +338,16 @@ p {
 
     /* Responsivitas untuk modal di mobile */
     .auth-modal-content {
-        width: 95%; /* Pastikan modal mengambil lebih banyak lebar di mobile */
+        width: 90%; /* Pastikan modal mengambil lebih banyak lebar di mobile */
         padding: 20px;
     }
     .auth-modal-content h2 {
-        font-size: 1.8em;
-        margin-bottom: 20px;
+        font-size: 1.5em; /* Ukuran judul modal di mobile */
+        margin-bottom: 15px;
     }
     .auth-modal-content input,
     .auth-modal-content button[type="submit"] {
-        font-size: 0.95em;
+        font-size: 0.9em;
         padding: 10px;
     }
     .close-button {
@@ -333,11 +366,28 @@ p {
         font-size: 0.8em;
         margin-top: 15px;
     }
+
+    /* Responsivitas untuk modal profil di mobile */
+    #profile-modal .auth-modal-content {
+        max-width: 95%;
+    }
+    #profile-display button,
+    #profile-edit-form button,
+    #change-password-form button,
+    #delete-account-confirmation button {
+        width: 100%; /* Tombol memenuhi lebar di mobile */
+        margin-top: 10px; /* Jarak antar tombol */
+        margin-left: 0; /* Hapus margin kiri untuk ratakan */
+    }
+    #profile-edit-form input,
+    #change-password-form input,
+    #delete-account-confirmation input {
+        width: calc(100% - 20px); /* Pastikan input mengisi lebar */
+    }
 }
 
-/* ----------- Gaya untuk Modal Otentikasi ----------- */
+/* ----------- Gaya untuk Modal Otentikasi & Profil ----------- */
 .auth-modal {
-    /* Pastikan ini disembunyikan secara default dan hanya muncul saat 'open' */
     display: none; /* Default: Sembunyi */
     position: fixed;
     z-index: 9999; /* Z-index yang sangat tinggi untuk memastikan di atas segalanya */
@@ -345,73 +395,57 @@ p {
     top: 0;
     width: 100%;
     height: 100%;
-    /* Tambahkan !important untuk memastikan aturan ini tidak ditimpa */
-    overflow: auto !important; 
+    overflow: auto !important;
     background-color: rgba(0,0,0,0.6) !important;
-    /* Gunakan flex secara default di sini, tetapi atur opacity dan visibility untuk menyembunyikan */
-    display: flex; /* Selalu flex, agar transisi lebih mulus */
-    justify-content: center !important; /* Pusatkan secara horizontal */
-    align-items: center !important; /* Pusatkan secara vertikal */
-    /* Tambahkan transisi untuk efek fade */
+    display: flex;
+    justify-content: center !important;
+    align-items: center !important;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .auth-modal.open {
-    display: flex !important; /* Ketika ada kelas 'open', tampilkan sebagai flexbox */
+    display: flex !important;
     opacity: 1 !important;
     visibility: visible !important;
 }
 
 .auth-modal-content {
     background-color: var(--bg-white);
-    margin: auto; /* Untuk pemusatan vertikal/horizontal */
+    margin: auto;
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     position: relative;
-    width: 90%; /* Lebar modal default */
-    max-width: 450px; /* Lebar maksimal */
+    width: 90%;
+    max-width: 450px;
     text-align: center;
-    /* Animasi muncul dari dalam (scale) */
     transform: scale(0.9);
-    transition: transform 0.3s ease-out; /* Transisi untuk scale */
+    transition: transform 0.3s ease-out;
 }
 
 .auth-modal.open .auth-modal-content {
-    transform: scale(1); /* Kembali ke ukuran normal saat terbuka */
-}
-
-
-@keyframes fadeInScale {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+    transform: scale(1);
 }
 
 .close-button {
     color: #aaa;
     position: absolute;
-    top: 15px; /* Jarak dari atas */
-    right: 20px; /* Jarak dari kanan */
+    top: 15px;
+    right: 20px;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
     transition: color 0.3s ease;
-    display: flex; /* Gunakan flex untuk memusatkan 'X' di dalam area */
+    display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999; /* Pastikan di atas konten modal lainnya jika ada tumpang tindih */
-    width: 35px; /* Berikan lebar dan tinggi agar area klik lebih besar */
+    z-index: 9999;
+    width: 35px;
     height: 35px;
-    border-radius: 50%; /* Membuatnya lingkaran */
-    background-color: rgba(255, 255, 255, 0.2); /* Sedikit latar belakang transparan */
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
@@ -437,9 +471,9 @@ p {
 
 .auth-modal-content input[type="email"],
 .auth-modal-content input[type="password"] {
-    width: calc(100% - 20px); /* Kurangi padding dari lebar total */
+    width: calc(100% - 20px);
     padding: 12px 10px;
-    margin: 0 auto; /* Tengah input */
+    margin: 0 auto;
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 1em;
@@ -472,14 +506,14 @@ p {
 }
 
 .auth-message {
-    color: red; /* Warna merah untuk pesan error */
+    color: red;
     margin-top: 15px;
     font-size: 0.9em;
-    height: 1.2em; /* Tinggi tetap untuk menghindari CLS */
+    height: 1.2em;
 }
 
 .auth-message.success {
-    color: green; /* Warna hijau untuk pesan sukses */
+    color: green;
 }
 
 .auth-switch {
@@ -517,30 +551,82 @@ p {
 
 .user-type-selection .radio-group {
     display: flex;
-    justify-content: center; /* Pusatkan radio button */
-    gap: 20px; /* Jarak antara radio button */
+    justify-content: center;
+    gap: 20px;
     padding: 5px 0;
 }
 
 .user-type-selection input[type="radio"] {
     margin-right: 5px;
-    transform: scale(1.1); /* Sedikit membesarkan radio button */
+    transform: scale(1.1);
     cursor: pointer;
 }
 
 .user-type-selection label[for="role-pembeli"],
 .user-type-selection label[for="role-penjual"] {
-    font-weight: normal; /* Override bold dari label utama */
+    font-weight: normal;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
-/* Responsivitas untuk modal */
+/* ----------- Gaya untuk Modal Profil ----------- */
+#profile-modal .auth-modal-content {
+    max-width: 500px; /* Sedikit lebih lebar untuk profil */
+}
+
+#profile-display p {
+    text-align: left;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color: #555;
+    word-break: break-all; /* Mencegah email panjang menyebabkan overflow */
+}
+
+#profile-display p span {
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+#profile-display button {
+    margin-top: 20px;
+    margin-bottom: 5px;
+    width: auto;
+    display: inline-block; /* Agar tombol bisa berdampingan jika ada ruang */
+}
+
+#profile-display button:last-child {
+    margin-bottom: 0;
+}
+
+/* Gaya untuk form edit/ubah password/hapus */
+#profile-edit-form h3,
+#change-password-form h3,
+#delete-account-confirmation h3 {
+    color: var(--primary-color);
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 1.6em;
+}
+
+.reauth-notice {
+    font-size: 0.9em;
+    color: #888;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.warning-text {
+    color: #dc3545; /* Merah untuk peringatan penting */
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Responsivitas untuk modal (lanjutan, memastikan tumpang tindih dengan aturan sebelumnya) */
 @media (max-width: 500px) {
     .auth-modal-content {
-        width: 95%; /* Lebih lebar di layar sangat kecil */
+        width: 95%;
         padding: 20px;
     }
     .auth-modal-content h2 {
@@ -556,21 +642,24 @@ p {
         font-size: 24px;
         top: 10px;
         right: 15px;
-        width: 28px; /* Sesuaikan ukuran area klik untuk mobile */
+        width: 28px;
         height: 28px;
         line-height: 28px;
     }
-    .auth-message {
-        font-size: 0.8em;
-        margin-top: 10px;
-    }
-    .auth-switch {
-        font-size: 0.8em;
-        margin-top: 15px;
-    }
     .user-type-selection .radio-group {
-        flex-direction: column; /* Susun vertikal di mobile */
+        flex-direction: column;
         gap: 10px;
-        align-items: flex-start; /* Ratakan kiri */
+        align-items: flex-start;
+    }
+    
+    /* Tombol profil di mobile */
+    #profile-display button,
+    #profile-edit-form button,
+    #change-password-form button,
+    #delete-account-confirmation button {
+        display: block; /* Tombol menjadi blok penuh di mobile */
+        width: 100%;
+        margin-top: 10px;
+        margin-left: 0;
     }
 }
