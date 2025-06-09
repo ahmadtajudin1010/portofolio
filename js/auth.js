@@ -1,6 +1,6 @@
 // Konfigurasi Firebase Anda (PASTIKAN UNTUK MENGGANTI INI DENGAN KONFIGURASI DARI FIREBASE CONSOLE ANDA)
 const firebaseConfig = {
-    apiKey: "AIzaSyBBBG_rOV2fHwvzbx_CCJLnC-6JB38hMuQ", // <--- PENTING: GANTI INI DENGAN API KEY ANDA YANG SEBENARNYA!
+    apiKey: "AIzaSyBBBG_rOV2fHwvzbx_CCJLnC-6JB38hMuM", // <--- PENTING: GANTI INI DENGAN API KEY ANDA YANG SEBENARNYA!
     authDomain: "firebas-25218.firebaseapp.com",
     projectId: "firebas-25218",
     storageBucket: "firebas-25218.firebasestorage.app",
