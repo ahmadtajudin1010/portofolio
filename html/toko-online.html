@@ -23,6 +23,8 @@
                 <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation">
                     <i class="fas fa-bars"></i>
                 </button>
+                <!-- Tombol untuk membuka modal login/daftar -->
+                <button id="auth-button" class="btn-auth">Login / Daftar</button>
             </nav>
         </div>
     </header>
@@ -119,7 +121,45 @@
         </div>
     </footer>
 
+    <!-- Bagian MODAL LOGIN -->
+    <div id="login-modal" class="auth-modal">
+        <div class="auth-modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="modal-title">Login</h2>
+            <form id="auth-form">
+                <input type="email" id="auth-email" placeholder="Email" required autocomplete="email">
+                <input type="password" id="auth-password" placeholder="Password" required
+                    autocomplete="current-password">
+                <button type="submit" id="auth-submit-btn">Login</button>
+            </form>
+            <p id="auth-message" class="auth-message"></p>
+            <p class="auth-switch">Belum punya akun? <span id="switch-to-register">Daftar di sini</span></p>
+        </div>
+    </div>
+
+    <!-- Bagian MODAL DAFTAR (Tersembunyi Awalnya) -->
+    <div id="register-modal" class="auth-modal">
+        <div class="auth-modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Daftar Akun Baru</h2>
+            <form id="register-form">
+                <input type="email" id="register-email" placeholder="Email" required autocomplete="email">
+                <input type="password" id="register-password" placeholder="Password" required
+                    autocomplete="new-password">
+                <input type="password" id="register-confirm-password" placeholder="Konfirmasi Password" required
+                    autocomplete="new-password">
+                <!-- Anda bisa menambahkan input untuk 'Pembeli' atau 'Penjual' di sini nanti,
+                tapi untuk sekarang, kita fokus pada pendaftaran dasar. -->
+                <button type="submit" id="register-submit-btn">Daftar</button>
+            </form>
+            <p id="register-message" class="auth-message"></p>
+            <p class="auth-switch">Sudah punya akun? <span id="switch-to-login">Login di sini</span></p>
+        </div>
+    </div>
+
+    <!-- Panggil JavaScript untuk halaman toko online dan otentikasi -->
     <script src="../js/toko-online.js"></script>
+    <script type="module" src="../js/auth.js"></script>
 </body>
 
 </html>
