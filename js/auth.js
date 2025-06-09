@@ -1,8 +1,7 @@
 // Konfigurasi Firebase Anda (PASTIKAN UNTUK MENGGANTI INI DENGAN KONFIGURASI DARI FIREBASE CONSOLE ANDA)
 const firebaseConfig = {
-    // === PENTING: GANTI NILAI apiKey INI DENGAN API KEY ASLI DARI PROYEK FIREBASE ANDA ===
-    // Contoh yang VALID: apiKey: "AIzaSyC0d34G4m1ng-1234567890abcdef",
-    apiKey: "AIzaSyBBBG_rOV2fHwvzbx_CCJLnC-6JB38hMuM", // <--- GANTI BAGIAN INI SAJA!
+    // === PENTING: PASTIKAN NILAI apiKey INI ADALAH KUNCI API ASLI DARI PROYEK FIREBASE ANDA ===
+    apiKey: "AIzaSyDKg-M8ZIZCXuv_emmNdVsrBfa-KhxleOg", // <--- KUNCI API BARU DARI ANDA!
     authDomain: "firebas-25218.firebaseapp.com",
     projectId: "firebas-25218",
     storageBucket: "firebas-25218.firebasestorage.app",
