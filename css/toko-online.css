@@ -65,6 +65,8 @@ p {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative; /* Penting untuk membentuk stacking context */
+    z-index: 1; /* Memberikan stacking context, tapi di bawah anak-anaknya yang penting */
 }
 
 .back-to-projects {
@@ -89,18 +91,10 @@ p {
 /* Penyesuaian untuk main-nav dan menu-toggle */
 .main-nav {
     position: relative; /* Penting untuk z-index anaknya */
-    z-index: 1005; /* Sedikit lebih tinggi dari header, tapi di bawah modal */
+    z-index: 1100; /* Lebih tinggi dari elemen header lainnya */
 }
 
-.menu-toggle {
-    display: none; /* Sembunyikan secara default untuk desktop */
-    background: none;
-    border: none;
-    font-size: 1.8em;
-    cursor: pointer;
-    color: var(--text-dark);
-    transition: transform 0.3s ease;
-}
+/* Aturan .menu-toggle telah dihapus */
 
 .btn-auth {
     background-color: var(--primary-color);
@@ -112,7 +106,7 @@ p {
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.2s ease;
     position: relative; /* Pastikan z-index berfungsi pada tombol itu sendiri */
-    z-index: 1010; /* Sangat tinggi untuk memastikan bisa diklik */
+    z-index: 1200; /* Sangat tinggi untuk memastikan bisa diklik, bahkan di atas main-nav */
 }
 
 .btn-auth:hover {
@@ -277,9 +271,7 @@ p {
         font-size: 1em;
     }
 
-    .menu-toggle {
-        display: block;
-    }
+    /* Aturan .menu-toggle telah dihapus di sini */
 
     .product-grid {
         /* Untuk mobile, gunakan kolom lebih sedikit atau satu kolom */
@@ -313,4 +305,32 @@ p {
 
     /* Responsivitas untuk modal di mobile */
     .auth-modal-content {
-        width: 90%; /* Pastikan modal mengambil lebih banyak lebar di mobile
+        width: 90%; /* Pastikan modal mengambil lebih banyak lebar di mobile */
+        padding: 20px;
+    }
+    .auth-modal-content h2 {
+        font-size: 1.5em; /* Ukuran judul modal di mobile */
+        margin-bottom: 15px;
+    }
+    .auth-modal-content input,
+    .auth-modal-content button[type="submit"] {
+        font-size: 0.9em;
+        padding: 10px;
+    }
+    .close-button {
+        font-size: 24px;
+        top: 8px; /* Sesuaikan posisi X */
+        right: 12px;
+        width: 28px; /* Lebih besar area sentuh */
+        height: 28px;
+        line-height: 28px;
+    }
+    .auth-message {
+        font-size: 0.8em;
+        margin-top: 10px;
+    }
+    .auth-switch {
+        font-size: 0.8em;
+        margin-top: 15px;
+    }
+}

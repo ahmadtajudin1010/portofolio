@@ -81,20 +81,12 @@ p {
     font-size: 1.2em;
 }
 
-/* Navigasi utama, tombol toggle, dan daftar navigasi untuk mobile */
+/* Navigasi utama, tombol toggle tidak ada lagi */
 .main-nav .nav-list { /* Ini seharusnya tidak ada di projects.html lagi */
     display: none;
 }
 
-.menu-toggle {
-    display: none; /* Sembunyikan secara default untuk desktop */
-    background: none;
-    border: none;
-    font-size: 1.8em;
-    cursor: pointer;
-    color: var(--text-dark);
-    transition: transform 0.3s ease;
-}
+/* Aturan .menu-toggle telah dihapus */
 
 /* Section Pilihan Kategori */
 .categories-section {
@@ -200,10 +192,7 @@ p {
         padding: 0 20px;
     }
 
-    /* Tampilkan tombol toggle hanya di mobile */
-    .menu-toggle {
-        display: block;
-    }
+    /* Aturan .menu-toggle telah dihapus di sini */
 
     .back-to-home {
         font-size: 0.9em;
