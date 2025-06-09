@@ -604,9 +604,6 @@ if (changePasswordForm) {
                 case 'auth/requires-recent-login':
                     changePasswordMessage.textContent = 'Untuk keamanan, silakan login ulang Anda dan coba lagi.';
                     break;
-                case 'auth/weak-password':
-                    changePasswordMessage.textContent = 'Password terlalu lemah (minimal 6 karakter).';
-                    break;
                 default:
                     changePasswordMessage.textContent = 'Gagal mengubah password. Silakan coba lagi.';
                     break;
