@@ -25,7 +25,7 @@ import {
     signOut,
     onAuthStateChanged,
     signInWithCustomToken, // Import untuk token kustom
-    signInAnonymously, // Import untuk login anonim
+    // signInAnonymously, // Dihapus karena tidak ingin menggunakan autentikasi anonim otomatis
     updateEmail, // Untuk mengubah email
     updatePassword, // Untuk mengubah password
     reauthenticateWithCredential, // Untuk re-autentikasi
@@ -166,15 +166,15 @@ const loadProfileData = async (user) => {
     }
 };
 
-// Inisialisasi otentikasi dengan custom token atau anonim
+// Inisialisasi otentikasi. Tidak akan melakukan login anonim otomatis.
 const initializeAuth = async () => {
     try {
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
             await signInWithCustomToken(auth, __initial_auth_token);
             console.log('Signed in with custom token.');
         } else {
-            await signInAnonymously(auth);
-            console.log('Signed in anonymously.');
+            console.log('No custom token found or anonymous login not desired. User will be prompted to login/register.');
+            // Tidak ada signInAnonymously() di sini
         }
     } catch (error) {
         console.error('Error during initial Firebase authentication:', error);
@@ -352,7 +352,7 @@ if (registerForm) {
             return;
         }
 
-        let userType = 'pembeli'; // Default role for new email/password registration
+        let userType = 'pembeli'; // Peran default untuk pendaftaran email/password baru
         if (rolePenjual.checked) {
             userType = 'penjual';
         } else if (rolePembeli.checked) {
