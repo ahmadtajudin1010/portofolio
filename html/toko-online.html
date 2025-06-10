@@ -19,13 +19,10 @@
                 </a>
             </div>
             <nav class="main-nav">
-                <!-- Tombol untuk membuka modal login/daftar (visible when logged out) -->
+                <!-- Tombol untuk membuka modal login/daftar -->
                 <button id="auth-button-login" class="btn-auth">Login / Daftar</button>
-
-                <!-- Tombol untuk membuka modal profil (visible when logged in) -->
                 <button id="auth-button-profile" class="btn-auth" style="display: none;">Profil Saya</button>
-                <!-- Tombol Logout (visible when logged in) -->
-                <button id="auth-button-logout" class="btn-auth btn-logout" style="display: none;">Logout</button>
+                <button id="auth-button-logout" class="btn-auth" style="display: none;">Logout</button>
             </nav>
         </div>
     </header>
@@ -135,6 +132,16 @@
             </form>
             <p id="auth-message" class="auth-message"></p>
             <p class="auth-switch">Belum punya akun? <span id="switch-to-register">Daftar di sini</span></p>
+
+            <!-- Tombol Lanjutkan dengan Google -->
+            <div class="mt-4 text-center">
+                <p class="text-sm text-gray-600 mb-2">Atau masuk dengan</p>
+                <button id="sign-in-with-google-btn"
+                    class="w-full py-2 px-4 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75 flex items-center justify-center">
+                    <i class="fab fa-google mr-2 text-lg"></i> Lanjutkan dengan Google
+                </button>
+            </div>
+
         </div>
     </div>
 
@@ -168,7 +175,7 @@
         </div>
     </div>
 
-    <!-- Bagian MODAL PROFIL PENGGUNA BARU -->
+    <!-- Bagian MODAL PROFIL (Tersembunyi Awalnya) -->
     <div id="profile-modal" class="auth-modal">
         <div class="auth-modal-content">
             <span class="close-button">&times;</span>
@@ -176,54 +183,47 @@
             <div id="profile-display">
                 <p>Email: <span id="profile-email"></span></p>
                 <p>Peran: <span id="profile-role"></span></p>
-                <!-- Anda bisa menambahkan lebih banyak info profil di sini -->
-                <button id="edit-profile-btn" class="btn-auth">Edit Profil</button>
-                <button id="change-password-btn" class="btn-auth">Ubah Password</button>
-                <button id="delete-account-btn" class="btn-auth btn-delete">Hapus Akun</button>
+                <button id="edit-profile-btn" class="btn-auth-profile">Edit Profil</button>
+                <button id="change-password-btn" class="btn-auth-profile">Ubah Password</button>
+                <button id="delete-account-btn" class="btn-auth-profile delete-btn">Hapus Akun</button>
             </div>
 
-            <!-- Formulir Edit Profil (awalnya tersembunyi) -->
-            <form id="profile-edit-form" style="display:none;">
-                <h3>Edit Informasi Profil</h3>
-                <input type="email" id="edit-email" placeholder="Email Baru" autocomplete="email">
-                <!-- Untuk saat ini, peran tidak bisa diedit langsung dari sini.
-                     Jika Anda ingin mengizinkan perubahan peran, ini akan lebih kompleks
-                     karena mungkin melibatkan hak akses dan validasi backend. -->
-                <button type="submit" class="btn-auth">Simpan Perubahan</button>
-                <button type="button" class="btn-auth btn-cancel" id="cancel-edit-btn">Batal</button>
+            <!-- Form Edit Profil (Email) -->
+            <form id="profile-edit-form" style="display: none; flex-direction: column; gap: 15px;">
+                <h3>Edit Email</h3>
+                <input type="email" id="edit-email" placeholder="Email Baru" required autocomplete="email">
                 <p id="edit-profile-message" class="auth-message"></p>
+                <button type="submit" class="btn-auth-profile">Simpan Perubahan</button>
+                <button type="button" id="cancel-edit-btn" class="btn-auth-profile cancel-btn">Batal</button>
             </form>
 
-            <!-- Formulir Ubah Password (awalnya tersembunyi) -->
-            <form id="change-password-form" style="display:none;">
+            <!-- Form Ubah Password -->
+            <form id="change-password-form" style="display: none; flex-direction: column; gap: 15px;">
                 <h3>Ubah Password</h3>
-                <p class="reauth-notice">Untuk keamanan, Anda mungkin perlu login ulang.</p>
-                <input type="password" id="current-password-reauth" placeholder="Password Saat Ini"
+                <input type="password" id="current-password-reauth" placeholder="Password Saat Ini" required
                     autocomplete="current-password">
-                <input type="password" id="new-password" placeholder="Password Baru" autocomplete="new-password">
-                <input type="password" id="confirm-new-password" placeholder="Konfirmasi Password Baru"
+                <input type="password" id="new-password" placeholder="Password Baru" required
                     autocomplete="new-password">
-                <button type="submit" class="btn-auth">Ubah Password</button>
-                <button type="button" class="btn-auth btn-cancel" id="cancel-password-change-btn">Batal</button>
+                <input type="password" id="confirm-new-password" placeholder="Konfirmasi Password Baru" required
+                    autocomplete="new-password">
                 <p id="change-password-message" class="auth-message"></p>
+                <button type="submit" class="btn-auth-profile">Ubah Password</button>
+                <button type="button" id="cancel-password-change-btn" class="btn-auth-profile cancel-btn">Batal</button>
             </form>
 
-            <!-- Konfirmasi Hapus Akun (awalnya tersembunyi) -->
-            <div id="delete-account-confirmation" style="display:none;">
+            <!-- Konfirmasi Hapus Akun -->
+            <div id="delete-account-confirmation" style="display: none;">
                 <h3>Konfirmasi Hapus Akun</h3>
-                <p class="warning-text">Anda akan menghapus akun secara permanen. Tindakan ini tidak dapat dibatalkan.
-                </p>
-                <p class="reauth-notice">Untuk melanjutkan, silakan login ulang dengan password Anda.</p>
-                <input type="password" id="delete-password-reauth" placeholder="Password Anda"
+                <p>Masukkan password Anda untuk menghapus akun secara permanen.</p>
+                <input type="password" id="delete-password-reauth" placeholder="Password Anda" required
                     autocomplete="current-password">
-                <button class="btn-auth btn-delete" id="confirm-delete-account-btn">Konfirmasi Hapus</button>
-                <button type="button" class="btn-auth btn-cancel" id="cancel-delete-btn">Batal</button>
                 <p id="delete-account-message" class="auth-message"></p>
+                <button type="button" id="confirm-delete-account-btn" class="btn-auth-profile delete-btn">Konfirmasi
+                    Hapus</button>
+                <button type="button" id="cancel-delete-btn" class="btn-auth-profile cancel-btn">Batal</button>
             </div>
-
         </div>
     </div>
-
 
     <!-- Panggil JavaScript untuk halaman toko online dan otentikasi -->
     <script src="../js/toko-online.js"></script>
