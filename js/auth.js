@@ -25,7 +25,6 @@ import {
     signOut,
     onAuthStateChanged,
     signInWithCustomToken, // Import untuk token kustom
-    // signInAnonymously, // Dihapus karena tidak ingin menggunakan autentikasi anonim otomatis
     updateEmail, // Untuk mengubah email
     updatePassword, // Untuk mengubah password
     reauthenticateWithCredential, // Untuk re-autentikasi
@@ -126,11 +125,18 @@ const updateAuthButtonsVisibility = async (user) => {
             if (docSnap.exists()) {
                 userRole = docSnap.data().userType === 'penjual' ? 'Penjual' : 'Pembeli';
             } else {
-                console.warn(`Dokumen profil untuk user ${userId} tidak ditemukan di Firestore.`);
-                userRole = 'Tidak Ditemukan (Data Profil Kosong)'; // Pesan lebih spesifik
+                console.warn(`Dokumen profil untuk user ${userId} tidak ditemukan di Firestore. Membuat dengan peran default 'Pembeli'.`);
+                // Jika dokumen profil tidak ada, buat secara otomatis dengan peran 'pembeli'
+                await setDoc(userProfileRef, {
+                    userType: 'pembeli', // Tetapkan 'pembeli' sebagai peran default jika profil kosong
+                    email: user.email || 'N/A', // Gunakan email pengguna atau 'N/A'
+                    displayName: user.displayName || 'Pengguna Baru', // Gunakan nama tampilan atau default
+                    createdAt: new Date()
+                });
+                userRole = 'Pembeli (Otomatis)'; // Informasikan bahwa peran diatur otomatis
             }
         } catch (error) {
-            console.error("Error fetching user role from Firestore:", error);
+            console.error("Error fetching or creating user role in Firestore:", error);
             userRole = 'Error (Lihat Konsol)'; // Pesan lebih informatif
         }
         authButtonProfile.textContent = `Profil Saya (${userRole})`;
@@ -157,7 +163,9 @@ const loadProfileData = async (user) => {
                 const data = docSnap.data();
                 profileRoleSpan.textContent = data.userType === 'penjual' ? 'Penjual' : 'Pembeli';
             } else {
-                profileRoleSpan.textContent = 'Tidak Ditemukan (Data Profil Kosong)'; // Pesan lebih spesifik
+                profileRoleSpan.textContent = 'Tidak Ditemukan (Membuat Profil...)'; // Pesan lebih spesifik
+                // Secara opsional, Anda bisa memanggil updateAuthButtonsVisibility(user) lagi di sini
+                // atau memiliki logika pembuatan profil yang sama seperti di updateAuthButtonsVisibility
             }
         } catch (error) {
             console.error("Error loading profile data from Firestore:", error); // Pesan error lebih jelas
@@ -417,18 +425,18 @@ if (signInWithGoogleBtn) {
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
             const userProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profiles`, userId);
 
-            // Periksa apakah pengguna baru atau sudah ada
+            // Periksa apakah pengguna baru atau sudah ada di Firestore (bukan hanya Auth)
             const docSnap = await getDoc(userProfileRef);
             if (!docSnap.exists()) {
-                // Pengguna baru, simpan profil dengan peran default (misal: 'pembeli')
+                // Pengguna baru atau pengguna lama tanpa profil Firestore, simpan profil dengan peran default (misal: 'pembeli')
                 await setDoc(userProfileRef, {
-                    userType: 'pembeli', // Tetapkan 'pembeli' sebagai peran default untuk login Google baru
+                    userType: 'pembeli', // Tetapkan 'pembeli' sebagai peran default untuk login Google baru/profil kosong
                     email: user.email,
                     displayName: user.displayName, // Simpan nama tampilan dari Google
                     photoURL: user.photoURL, // Simpan URL foto profil dari Google
                     createdAt: new Date()
                 });
-                console.log('Profil pengguna Google baru disimpan ke Firestore.');
+                console.log('Profil pengguna Google baru/kosong disimpan ke Firestore dengan peran "Pembeli".');
             } else {
                 console.log('Profil pengguna Google sudah ada di Firestore.');
             }
