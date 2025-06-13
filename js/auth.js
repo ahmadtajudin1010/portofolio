@@ -205,10 +205,15 @@ const closeAllModalsAndResetForms = () => {
     profileModal.classList.add('hidden');
 
     authMessage.textContent = '';
+    authMessage.className = 'text-red-500 text-sm mt-4 text-center'; // Reset kelas default
     registerMessage.textContent = '';
+    registerMessage.className = 'text-red-500 text-sm mt-4 text-center'; // Reset kelas default
     editProfileMessage.textContent = '';
+    editProfileMessage.className = 'text-red-500 text-sm mt-4 text-center'; // Reset kelas default
     changePasswordMessage.textContent = '';
+    changePasswordMessage.className = 'text-red-500 text-sm mt-4 text-center'; // Reset kelas default
     deleteAccountMessage.textContent = '';
+    deleteAccountMessage.className = 'text-red-500 text-sm mt-4 text-center'; // Reset kelas default
 
     authForm.reset();
     registerForm.reset();
@@ -301,7 +306,8 @@ if (authForm) {
             switch (error.code) {
                 case 'auth/user-not-found':
                 case 'auth/wrong-password':
-                    authMessage.textContent = 'Email atau password salah.';
+                case 'auth/invalid-credential': // Tambahkan ini jika errornya langsung ini
+                    authMessage.textContent = 'Login gagal: Tolong daftar jika tidak punya akun dan tolong reset password jika lupa.';
                     break;
                 case 'auth/invalid-email':
                     authMessage.textContent = 'Format email tidak valid.';
@@ -578,7 +584,7 @@ if (profileEditForm) {
             // Perbarui data di Firestore
             const updateData = {
                 email: newEmail,
-                photoURL: photoURLToSave,
+                photoURL: photoURLToSave, // Simpan string Base64 di Firestore
                 updatedAt: new Date()
             };
             await updateDoc(userProfileRef, updateData);
