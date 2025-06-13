@@ -28,7 +28,9 @@ import {
     reauthenticateWithCredential,
     EmailAuthProvider,
     deleteUser,
-    sendPasswordResetEmail // Import fungsi untuk reset password
+    sendPasswordResetEmail,
+    signInWithCustomToken, // Import untuk token kustom
+    signInAnonymously // Import untuk login anonim
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { 
     getFirestore, 
@@ -41,14 +43,15 @@ import {
 
 // Inisialisasi aplikasi Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app); // Dapatkan instance autentikasi Firebase
-const db = getFirestore(app); // Dapatkan instance Firestore
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 
 // --- Elemen UI yang akan berinteraksi ---
 const authButtonLogin = document.getElementById('auth-button-login');
 const authButtonProfile = document.getElementById('auth-button-profile');
 const authButtonLogout = document.getElementById('auth-button-logout');
+const authButtonsContainer = document.getElementById('auth-buttons-container'); // Kontainer tombol header
 
 const loginModal = document.getElementById('login-modal');
 const registerModal = document.getElementById('register-modal');
@@ -63,18 +66,8 @@ const authMessage = document.getElementById('auth-message');
 const switchToRegisterLink = document.getElementById('switch-to-register');
 const signInWithGoogleBtn = document.getElementById('sign-in-with-google-btn');
 
-// Elemen baru untuk reset password
 const resetPasswordLinkContainer = document.getElementById('reset-password-link-container');
 const resetPasswordLink = document.getElementById('reset-password-link');
-
-// Tambahkan log untuk memastikan elemen ditemukan
-if (!resetPasswordLinkContainer) {
-    console.error('Error: Element "reset-password-link-container" not found!');
-}
-if (!resetPasswordLink) {
-    console.error('Error: Element "reset-password-link" not found!');
-}
-
 
 const registerForm = document.getElementById('register-form');
 const registerEmailInput = document.getElementById('register-email');
@@ -128,11 +121,12 @@ const updateAuthButtonsVisibility = async (user) => {
         authButtonLogout.style.display = 'inline-block';
 
         const userId = user.uid;
-        const appId = firebaseConfig.appId.split(':')[1]; // Ambil ID aplikasi dari config
+        // Gunakan __app_id jika tersedia, jika tidak gunakan 'default-app-id'
+        const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
         const userProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profiles`, userId);
 
         let userRole = 'Pengguna';
-        let photoURL = user.photoURL || 'https://placehold.co/120x120/CCCCCC/000000?text=Foto'; // Default placeholder
+        let photoURL = user.photoURL || 'https://placehold.co/120x120/CCCCCC/000000?text=Foto';
 
         try {
             const docSnap = await getDoc(userProfileRef);
@@ -144,16 +138,16 @@ const updateAuthButtonsVisibility = async (user) => {
                 }
             } else {
                 console.warn(`Dokumen profil untuk user ${userId} tidak ditemukan di Firestore. Membuat dengan peran default 'Pembeli'.`);
-                // Buat dokumen profil dengan peran default jika tidak ada
+                // Jika dokumen profil tidak ditemukan, buat yang baru dengan peran default 'pembeli'
                 await setDoc(userProfileRef, {
                     userType: 'pembeli',
                     email: user.email || 'N/A',
                     displayName: user.displayName || 'Pengguna Baru',
-                    photoURL: user.photoURL || null, // Ambil dari Auth jika ada, atau null
+                    photoURL: user.photoURL || null,
                     createdAt: new Date()
                 });
                 userRole = 'Pembeli (Otomatis)';
-                photoURL = user.photoURL || photoURL; // Gunakan foto dari Auth jika ada
+                photoURL = user.photoURL || photoURL; // Gunakan photoURL dari Google jika ada
             }
         } catch (error) {
             console.error("Error fetching or creating user role/photo in Firestore:", error);
@@ -161,7 +155,7 @@ const updateAuthButtonsVisibility = async (user) => {
         }
         authButtonProfile.textContent = `Profil Saya (${userRole})`;
         if (profilePhotoDisplay) {
-            profilePhotoDisplay.src = photoURL; // Set foto profil di tampilan utama modal
+            profilePhotoDisplay.src = photoURL;
         }
 
     } else {
@@ -169,7 +163,7 @@ const updateAuthButtonsVisibility = async (user) => {
         authButtonProfile.style.display = 'none';
         authButtonLogout.style.display = 'none';
         if (profilePhotoDisplay) {
-            profilePhotoDisplay.src = 'https://placehold.co/120x120/CCCCCC/000000?text=Foto'; // Reset foto ke default
+            profilePhotoDisplay.src = 'https://placehold.co/120x120/CCCCCC/000000?text=Foto';
         }
     }
 };
@@ -183,10 +177,10 @@ const loadProfileData = async (user) => {
         profileEmailSpan.textContent = user.email;
 
         const userId = user.uid;
-        const appId = firebaseConfig.appId.split(':')[1];
+        const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
         const userProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profiles`, userId);
 
-        let currentPhotoURL = user.photoURL || 'https://placehold.co/120x120/CCCCCC/000000?text=Foto'; // Ambil dari Auth atau placeholder
+        let currentPhotoURL = user.photoURL || 'https://placehold.co/120x120/CCCCCC/000000?text=Foto';
 
         try {
             const docSnap = await getDoc(userProfileRef);
@@ -197,7 +191,16 @@ const loadProfileData = async (user) => {
                     currentPhotoURL = data.photoURL;
                 }
             } else {
-                profileRoleSpan.textContent = 'Tidak Ditemukan (Membuat Profil...)'; // Seharusnya sudah dihandle di updateAuthButtonsVisibility
+                profileRoleSpan.textContent = 'Tidak Ditemukan (Membuat Profil...)';
+                // Jika profil tidak ada (misalnya login pertama kali dengan Google), buat entri default
+                await setDoc(userProfileRef, {
+                    userType: 'pembeli', // Default untuk pengguna baru Google
+                    email: user.email,
+                    displayName: user.displayName || user.email.split('@')[0],
+                    photoURL: user.photoURL || null,
+                    createdAt: new Date()
+                });
+                profileRoleSpan.textContent = 'Pembeli (Otomatis)';
             }
         } catch (error) {
             console.error("Error loading profile data from Firestore:", error);
@@ -205,7 +208,7 @@ const loadProfileData = async (user) => {
         }
 
         if (profilePhotoDisplay) profilePhotoDisplay.src = currentPhotoURL;
-        if (profilePhotoPreview) profilePhotoPreview.src = currentPhotoURL; // Update pratinjau juga
+        if (profilePhotoPreview) profilePhotoPreview.src = currentPhotoURL;
 
     }
 };
@@ -219,30 +222,28 @@ const closeAllModalsAndResetForms = () => {
     profileModal.classList.add('hidden');
 
     authMessage.textContent = '';
-    authMessage.className = 'text-red-500 text-sm mt-4 text-center'; // Reset kelas default
+    authMessage.className = 'text-red-500 text-sm mt-4 text-center';
     registerMessage.textContent = '';
-    registerMessage.className = 'text-red-500 text-sm mt-4 text-center'; // Reset kelas default
+    registerMessage.className = 'text-red-500 text-sm mt-4 text-center';
     editProfileMessage.textContent = '';
-    editProfileMessage.className = 'text-red-500 text-sm mt-4 text-center'; // Reset kelas default
+    editProfileMessage.className = 'text-red-500 text-sm mt-4 text-center';
     changePasswordMessage.textContent = '';
-    changePasswordMessage.className = 'text-red-500 text-sm mt-4 text-center'; // Reset kelas default
+    changePasswordMessage.className = 'text-red-500 text-sm mt-4 text-center';
     deleteAccountMessage.textContent = '';
-    deleteAccountMessage.className = 'text-red-500 text-sm mt-4 text-center'; // Reset kelas default
+    deleteAccountMessage.className = 'text-red-500 text-sm mt-4 text-center';
 
     authForm.reset();
     registerForm.reset();
     profileEditForm.reset();
     changePasswordForm.reset();
     deletePasswordReauthInput.value = '';
-    profilePhotoInput.value = ''; // Reset input file foto
+    profilePhotoInput.value = '';
 
-    // Sembunyikan link reset password saat modal ditutup
     if (resetPasswordLinkContainer) {
         resetPasswordLinkContainer.style.display = 'none';
-        console.log('resetPasswordLinkContainer disembunyikan saat modal ditutup.');
     }
 
-    profileDisplay.classList.remove('hidden'); // Pastikan tampilan utama profil terlihat
+    profileDisplay.classList.remove('hidden');
     profileEditForm.classList.add('hidden');
     changePasswordForm.classList.add('hidden');
     deleteAccountConfirmation.classList.add('hidden');
@@ -253,10 +254,34 @@ const closeAllModalsAndResetForms = () => {
 
 // --- Inisialisasi & Listener Auth ---
 
+// Inisialisasi otentikasi dengan custom token atau anonim
+const initializeAuth = async () => {
+    try {
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            await signInWithCustomToken(auth, __initial_auth_token);
+            console.log('Signed in with custom token.');
+        } else {
+            await signInAnonymously(auth);
+            console.log('Signed in anonymously.');
+        }
+    } catch (error) {
+        console.error('Error during initial Firebase authentication:', error);
+    }
+};
+
+// Panggil inisialisasi otentikasi saat script dimuat
+initializeAuth();
+
 // Listener utama untuk memantau perubahan status autentikasi Firebase
 onAuthStateChanged(auth, (user) => {
     console.log('onAuthStateChanged triggered. User:', user ? user.email || user.uid : 'null');
     updateAuthButtonsVisibility(user); // Panggil untuk memperbarui UI header
+
+    // Tambahan: Tampilkan kontainer tombol setelah status auth diketahui
+    if (authButtonsContainer) {
+        authButtonsContainer.style.opacity = '1';
+    }
+
     if (user) {
         closeAllModalsAndResetForms(); // Tutup modal jika pengguna login
         loadProfileData(user); // Muat data profil saat login
@@ -286,10 +311,8 @@ if (authButtonLogin) {
         loginModal.classList.remove('hidden');
         authMessage.textContent = '';
         authForm.reset();
-        // Sembunyikan link reset password saat modal dibuka
         if (resetPasswordLinkContainer) {
             resetPasswordLinkContainer.style.display = 'none';
-            console.log('resetPasswordLinkContainer disembunyikan saat modal dibuka.');
         }
     });
 }
@@ -317,10 +340,8 @@ if (authForm) {
     authForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         authMessage.textContent = '';
-        // Sembunyikan link reset password pada setiap percobaan login
         if (resetPasswordLinkContainer) {
             resetPasswordLinkContainer.style.display = 'none';
-            console.log('resetPasswordLinkContainer disembunyikan sebelum percobaan login.');
         }
 
         const email = authEmailInput.value;
@@ -330,7 +351,7 @@ if (authForm) {
             await signInWithEmailAndPassword(auth, email, password);
             authMessage.textContent = 'Login berhasil!';
             authMessage.className = 'text-green-500 text-sm mt-4 text-center';
-            setTimeout(closeAllModalsAndResetForms, 1500);
+            setTimeout(closeAllModalsAndResetForms, 1500); // onAuthStateChanged akan handle penutupan
         } catch (error) {
             console.error('Error saat login:', error.code, error.message);
             authMessage.className = 'text-red-500 text-sm mt-4 text-center';
@@ -339,11 +360,8 @@ if (authForm) {
                 case 'auth/wrong-password':
                 case 'auth/invalid-credential':
                     authMessage.textContent = 'Login gagal: Tolong daftar jika tidak punya akun dan tolong reset password jika lupa.';
-                    // Tampilkan link reset password
                     if (resetPasswordLinkContainer) {
                         resetPasswordLinkContainer.style.display = 'block';
-                        console.log('resetPasswordLinkContainer.style.display diubah menjadi block.');
-                        console.log('Current display style of resetPasswordLinkContainer:', resetPasswordLinkContainer.style.display);
                     }
                     break;
                 case 'auth/invalid-email':
@@ -372,8 +390,7 @@ if (resetPasswordLink) {
                 authMessage.textContent = 'Link reset password telah dikirim ke email Anda!';
                 authMessage.className = 'text-green-500 text-sm mt-4 text-center';
                 if (resetPasswordLinkContainer) {
-                    resetPasswordLinkContainer.style.display = 'none'; // Sembunyikan setelah berhasil
-                    console.log('resetPasswordLinkContainer disembunyikan setelah reset berhasil.');
+                    resetPasswordLinkContainer.style.display = 'none';
                 }
             } catch (error) {
                 console.error('Error mengirim reset password:', error.code, error.message);
@@ -417,7 +434,7 @@ if (registerForm) {
         }
 
         const userType = rolePenjual.checked ? 'penjual' : 'pembeli';
-        const appId = firebaseConfig.appId.split(':')[1];
+        const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
 
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -427,15 +444,18 @@ if (registerForm) {
                 userType: userType,
                 email: user.email,
                 createdAt: new Date(),
-                photoURL: null // Default photoURL saat pendaftaran email/password
+                photoURL: null
             });
 
-            registerMessage.textContent = 'Pendaftaran berhasil! Silakan login.';
+            registerMessage.textContent = 'Pendaftaran berhasil! Anda akan otomatis login.';
             registerMessage.className = 'text-green-500 text-sm mt-4 text-center';
+            // === PERBAIKAN DI SINI ===
+            // Hapus baris ini yang sebelumnya membuka modal login secara manual:
+            // loginModal.classList.remove('hidden'); 
             setTimeout(() => {
-                registerModal.classList.add('hidden');
-                loginModal.classList.remove('hidden');
+                registerModal.classList.add('hidden'); // Cukup sembunyikan modal daftar
                 registerForm.reset();
+                // onAuthStateChanged akan mendeteksi user baru dan menutup modal serta update UI header
             }, 1500);
         } catch (error) {
             console.error('Error saat daftar:', error.code, error.message);
@@ -462,10 +482,8 @@ if (registerForm) {
 if (signInWithGoogleBtn) {
     signInWithGoogleBtn.addEventListener('click', async () => {
         authMessage.textContent = '';
-        // Sembunyikan link reset password
         if (resetPasswordLinkContainer) {
             resetPasswordLinkContainer.style.display = 'none';
-            console.log('resetPasswordLinkContainer disembunyikan saat login Google.');
         }
         const provider = new GoogleAuthProvider();
 
@@ -473,22 +491,21 @@ if (signInWithGoogleBtn) {
             const userCredential = await signInWithPopup(auth, provider);
             const user = userCredential.user;
             const userId = user.uid;
-            const appId = firebaseConfig.appId.split(':')[1];
+            const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
             const userProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profiles`, userId);
 
             const docSnap = await getDoc(userProfileRef);
             if (!docSnap.exists()) {
                 await setDoc(userProfileRef, {
-                    userType: 'pembeli', // Peran default untuk Google Sign-In baru
+                    userType: 'pembeli',
                     email: user.email,
                     displayName: user.displayName || user.email.split('@')[0],
-                    photoURL: user.photoURL || null, // URL foto dari Google atau null
+                    photoURL: user.photoURL || null,
                     createdAt: new Date()
                 });
                 console.log('Profil Google baru disimpan ke Firestore.');
             } else {
                 console.log('Profil Google sudah ada di Firestore.');
-                // Update photoURL dan displayName jika ada perubahan dari Google Auth
                 if (user.photoURL && docSnap.data().photoURL !== user.photoURL || 
                     user.displayName && docSnap.data().displayName !== user.displayName) {
                     await updateDoc(userProfileRef, { 
@@ -529,7 +546,6 @@ if (authButtonLogout) {
         try {
             await signOut(auth);
             console.log('Pengguna berhasil logout');
-            // onAuthStateChanged akan menangani pembaruan UI
         } catch (error) {
             console.error('Error saat logout:', error);
         }
@@ -543,7 +559,6 @@ if (authButtonProfile) {
         if (user) {
             loadProfileData(user);
             profileModal.classList.remove('hidden');
-            // Pastikan tampilan awal profil yang terlihat
             profileDisplay.classList.remove('hidden');
             profileEditForm.classList.add('hidden');
             changePasswordForm.classList.add('hidden');
@@ -551,7 +566,7 @@ if (authButtonProfile) {
             editProfileMessage.textContent = '';
             changePasswordMessage.textContent = '';
             deleteAccountMessage.textContent = '';
-            profilePhotoInput.value = ''; // Reset input file saat modal dibuka
+            profilePhotoInput.value = '';
         } else {
             loginModal.classList.remove('hidden');
         }
@@ -610,7 +625,7 @@ if (profileEditForm) {
     profileEditForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         editProfileMessage.textContent = 'Menyimpan perubahan...';
-        editProfileMessage.className = 'text-blue-500 text-sm mt-4 text-center'; // Info style
+        editProfileMessage.className = 'text-blue-500 text-sm mt-4 text-center';
         
         const newEmail = editEmailInput.value;
         const user = auth.currentUser;
@@ -623,11 +638,10 @@ if (profileEditForm) {
         }
 
         let photoURLToSave = user.photoURL || null;
-        const appId = firebaseConfig.appId.split(':')[1];
+        const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
         const userProfileRef = doc(db, `artifacts/${appId}/users/${user.uid}/profiles`, user.uid);
         
         try {
-            // Konversi dan simpan foto sebagai Base64 jika ada file baru
             if (file) {
                 const reader = new FileReader();
                 const fileReadPromise = new Promise((resolve, reject) => {
@@ -636,33 +650,22 @@ if (profileEditForm) {
                 });
                 reader.readAsDataURL(file);
                 photoURLToSave = await fileReadPromise;
-
-                // Opsional: Cek ukuran Base64 sebelum menyimpan (perkiraan)
-                // Ini sangat penting jika Anda sering mendapatkan error batas ukuran
-                // const base64SizeKB = (photoURLToSave.length * 0.75 / 1024); // Perkiraan ukuran
-                // if (base64SizeKB > 900) { // Misalnya 900KB dari 1MB batas Firestore
-                //     throw { code: 'custom/file-too-large', message: 'File foto terlalu besar! Maksimal sekitar 900KB.' };
-                // }
-
                 console.log('Foto profil berhasil dikonversi ke Base64.');
             }
 
-            // Perbarui Email di Firebase Authentication (jika berubah)
             if (newEmail !== user.email && newEmail) {
                 await updateEmail(user, newEmail);
                 console.log('Email di Auth berhasil diperbarui.');
             }
 
-            // Perbarui Profil di Firebase Authentication (untuk photoURL)
             await updateProfile(user, {
                 photoURL: photoURLToSave
             });
             console.log('Profil pengguna di Auth berhasil diperbarui.');
 
-            // Perbarui data di Firestore
             const updateData = {
                 email: newEmail,
-                photoURL: photoURLToSave, // Simpan string Base64 di Firestore
+                photoURL: photoURLToSave,
                 updatedAt: new Date()
             };
             await updateDoc(userProfileRef, updateData);
@@ -696,11 +699,10 @@ if (profileEditForm) {
                 case 'auth/requires-recent-login':
                     errorMessage = 'Tindakan ini memerlukan login ulang Anda. Silakan logout dan login kembali, lalu coba ubah email.';
                     break;
-                case 'custom/file-too-large': // Custom error jika Anda menerapkan cek ukuran
+                case 'custom/file-too-large':
                     errorMessage = error.message;
                     break;
                 default:
-                    // Coba deteksi error Firestore yang mungkin terkait ukuran
                     if (error.message && error.message.includes('Function Document.prototype.update failed: document is too large')) {
                          errorMessage = 'Foto terlalu besar! Dokumen Firestore terbatas 1MB. Silakan pilih foto yang lebih kecil.';
                     } else {
@@ -829,10 +831,9 @@ if (confirmDeleteAccountBtn) {
             const credential = EmailAuthProvider.credential(user.email, passwordToDelete);
             await reauthenticateWithCredential(user, credential);
 
-            const appId = firebaseConfig.appId.split(':')[1];
+            const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
             const userProfileRef = doc(db, `artifacts/${appId}/users/${user.uid}/profiles`, user.uid);
             
-            // Hapus dokumen profil dari Firestore (tidak ada lagi penghapusan dari Storage)
             try {
                 await deleteDoc(userProfileRef);
                 console.log('Dokumen profil Firestore berhasil dihapus.');
