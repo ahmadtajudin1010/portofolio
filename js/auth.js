@@ -449,9 +449,6 @@ if (registerForm) {
 
             registerMessage.textContent = 'Pendaftaran berhasil! Anda akan otomatis login.';
             registerMessage.className = 'text-green-500 text-sm mt-4 text-center';
-            // === PERBAIKAN DI SINI ===
-            // Hapus baris ini yang sebelumnya membuka modal login secara manual:
-            // loginModal.classList.remove('hidden'); 
             setTimeout(() => {
                 registerModal.classList.add('hidden'); // Cukup sembunyikan modal daftar
                 registerForm.reset();
@@ -851,7 +848,8 @@ if (confirmDeleteAccountBtn) {
             deleteAccountMessage.className = 'text-red-500 text-sm mt-4 text-center';
             switch (error.code) {
                 case 'auth/wrong-password':
-                    deleteAccountMessage.textContent = 'Password salah.';
+                case 'auth/invalid-credential': // Tambahkan ini agar pesan seragam untuk kredensial salah
+                    deleteAccountMessage.textContent = 'Gagal menghapus akun: tolong ganti password jika tidak tau.';
                     break;
                 case 'auth/requires-recent-login':
                     deleteAccountMessage.textContent = 'Untuk keamanan, silakan login ulang dan coba lagi.';
