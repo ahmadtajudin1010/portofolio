@@ -67,6 +67,14 @@ const signInWithGoogleBtn = document.getElementById('sign-in-with-google-btn');
 const resetPasswordLinkContainer = document.getElementById('reset-password-link-container');
 const resetPasswordLink = document.getElementById('reset-password-link');
 
+// Tambahkan log untuk memastikan elemen ditemukan
+if (!resetPasswordLinkContainer) {
+    console.error('Error: Element "reset-password-link-container" not found!');
+}
+if (!resetPasswordLink) {
+    console.error('Error: Element "reset-password-link" not found!');
+}
+
 
 const registerForm = document.getElementById('register-form');
 const registerEmailInput = document.getElementById('register-email');
@@ -334,7 +342,8 @@ if (authForm) {
                     // Tampilkan link reset password
                     if (resetPasswordLinkContainer) {
                         resetPasswordLinkContainer.style.display = 'block';
-                        console.log('resetPasswordLinkContainer ditampilkan karena error login.');
+                        console.log('resetPasswordLinkContainer.style.display diubah menjadi block.');
+                        console.log('Current display style of resetPasswordLinkContainer:', resetPasswordLinkContainer.style.display);
                     }
                     break;
                 case 'auth/invalid-email':
