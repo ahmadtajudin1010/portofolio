@@ -27,7 +27,8 @@ import {
     updatePassword,
     reauthenticateWithCredential,
     EmailAuthProvider,
-    deleteUser
+    deleteUser,
+    sendPasswordResetEmail // Import fungsi untuk reset password
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { 
     getFirestore, 
@@ -61,6 +62,11 @@ const authPasswordInput = document.getElementById('auth-password');
 const authMessage = document.getElementById('auth-message');
 const switchToRegisterLink = document.getElementById('switch-to-register');
 const signInWithGoogleBtn = document.getElementById('sign-in-with-google-btn');
+
+// Elemen baru untuk reset password
+const resetPasswordLinkContainer = document.getElementById('reset-password-link-container');
+const resetPasswordLink = document.getElementById('reset-password-link');
+
 
 const registerForm = document.getElementById('register-form');
 const registerEmailInput = document.getElementById('register-email');
@@ -222,6 +228,12 @@ const closeAllModalsAndResetForms = () => {
     deletePasswordReauthInput.value = '';
     profilePhotoInput.value = ''; // Reset input file foto
 
+    // Sembunyikan link reset password saat modal ditutup
+    if (resetPasswordLinkContainer) {
+        resetPasswordLinkContainer.style.display = 'none';
+        console.log('resetPasswordLinkContainer disembunyikan saat modal ditutup.');
+    }
+
     profileDisplay.classList.remove('hidden'); // Pastikan tampilan utama profil terlihat
     profileEditForm.classList.add('hidden');
     changePasswordForm.classList.add('hidden');
@@ -266,6 +278,11 @@ if (authButtonLogin) {
         loginModal.classList.remove('hidden');
         authMessage.textContent = '';
         authForm.reset();
+        // Sembunyikan link reset password saat modal dibuka
+        if (resetPasswordLinkContainer) {
+            resetPasswordLinkContainer.style.display = 'none';
+            console.log('resetPasswordLinkContainer disembunyikan saat modal dibuka.');
+        }
     });
 }
 
@@ -292,6 +309,12 @@ if (authForm) {
     authForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         authMessage.textContent = '';
+        // Sembunyikan link reset password pada setiap percobaan login
+        if (resetPasswordLinkContainer) {
+            resetPasswordLinkContainer.style.display = 'none';
+            console.log('resetPasswordLinkContainer disembunyikan sebelum percobaan login.');
+        }
+
         const email = authEmailInput.value;
         const password = authPasswordInput.value;
 
@@ -306,8 +329,13 @@ if (authForm) {
             switch (error.code) {
                 case 'auth/user-not-found':
                 case 'auth/wrong-password':
-                case 'auth/invalid-credential': // Tambahkan ini jika errornya langsung ini
+                case 'auth/invalid-credential':
                     authMessage.textContent = 'Login gagal: Tolong daftar jika tidak punya akun dan tolong reset password jika lupa.';
+                    // Tampilkan link reset password
+                    if (resetPasswordLinkContainer) {
+                        resetPasswordLinkContainer.style.display = 'block';
+                        console.log('resetPasswordLinkContainer ditampilkan karena error login.');
+                    }
                     break;
                 case 'auth/invalid-email':
                     authMessage.textContent = 'Format email tidak valid.';
@@ -322,6 +350,42 @@ if (authForm) {
         }
     });
 }
+
+// Event listener untuk link reset password
+if (resetPasswordLink) {
+    resetPasswordLink.addEventListener('click', async () => {
+        const email = authEmailInput.value; // Ambil email dari input login
+        if (email) {
+            authMessage.textContent = 'Mengirim link reset password...';
+            authMessage.className = 'text-blue-500 text-sm mt-4 text-center';
+            try {
+                await sendPasswordResetEmail(auth, email);
+                authMessage.textContent = 'Link reset password telah dikirim ke email Anda!';
+                authMessage.className = 'text-green-500 text-sm mt-4 text-center';
+                if (resetPasswordLinkContainer) {
+                    resetPasswordLinkContainer.style.display = 'none'; // Sembunyikan setelah berhasil
+                    console.log('resetPasswordLinkContainer disembunyikan setelah reset berhasil.');
+                }
+            } catch (error) {
+                console.error('Error mengirim reset password:', error.code, error.message);
+                authMessage.className = 'text-red-500 text-sm mt-4 text-center';
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                    case 'auth/user-not-found':
+                        authMessage.textContent = 'Email tidak terdaftar atau tidak valid. Silakan coba email lain.';
+                        break;
+                    default:
+                        authMessage.textContent = `Gagal mengirim link reset password: ${error.message}`;
+                        break;
+                }
+            }
+        } else {
+            authMessage.textContent = 'Masukkan email Anda di kolom login untuk mereset password.';
+            authMessage.className = 'text-red-500 text-sm mt-4 text-center';
+        }
+    });
+}
+
 
 // Daftar Email/Password
 if (registerForm) {
@@ -389,6 +453,11 @@ if (registerForm) {
 if (signInWithGoogleBtn) {
     signInWithGoogleBtn.addEventListener('click', async () => {
         authMessage.textContent = '';
+        // Sembunyikan link reset password
+        if (resetPasswordLinkContainer) {
+            resetPasswordLinkContainer.style.display = 'none';
+            console.log('resetPasswordLinkContainer disembunyikan saat login Google.');
+        }
         const provider = new GoogleAuthProvider();
 
         try {
