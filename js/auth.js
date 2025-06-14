@@ -97,7 +97,7 @@ const cancelEditBtn = document.getElementById('cancel-edit-btn');
 const changePasswordBtn = document.getElementById('change-password-btn');
 const changePasswordForm = document.getElementById('change-password-form');
 const currentPasswordReauthInput = document.getElementById('current-password-reauth');
-const newPasswordInput = document = document.getElementById('new-password');
+const newPasswordInput = document.getElementById('new-password');
 const confirmNewPasswordInput = document.getElementById('confirm-new-password');
 const changePasswordMessage = document.getElementById('change-password-message');
 const cancelPasswordChangeBtn = document.getElementById('cancel-password-change-btn');
@@ -118,6 +118,12 @@ const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
  * @param {Object} user - Objek pengguna Firebase saat ini.
  */
 const updateAuthButtonsVisibility = async (user) => {
+    // Debugging: Cek apakah elemen authButtonsContainer ditemukan
+    if (!authButtonsContainer) {
+        console.error("Elemen 'auth-buttons-container' tidak ditemukan di DOM!");
+        return; // Hentikan eksekusi jika elemen tidak ada
+    }
+
     if (user) {
         authButtonLogin.style.display = 'none';
         authButtonProfile.style.display = 'flex'; // Gunakan flex untuk menampung gambar saja
@@ -275,8 +281,12 @@ onAuthStateChanged(auth, (user) => {
     console.log('onAuthStateChanged triggered. User:', user ? user.email || user.uid : 'null');
     updateAuthButtonsVisibility(user); // Panggil untuk memperbarui UI header
 
+    // Debugging: Pastikan authButtonsContainer ada sebelum mengubah opacity
     if (authButtonsContainer) {
         authButtonsContainer.style.opacity = '1';
+        console.log("auth-buttons-container opacity set to 1.");
+    } else {
+        console.error("auth-buttons-container tidak ditemukan saat onAuthStateChanged!");
     }
 
     if (user) {
@@ -353,7 +363,7 @@ if (authForm) {
                 case 'auth/user-not-found':
                 case 'auth/wrong-password':
                 case 'auth/invalid-credential':
-                    authMessage.textContent = 'Login gagal: Tolong daftar jika tidak punya akun dan tolong reset password jika lupa.';
+                    authMessage.textContent = 'Login gagal: Email atau password salah.';
                     if (resetPasswordLinkContainer) {
                         resetPasswordLinkContainer.style.display = 'block';
                     }
@@ -884,7 +894,7 @@ if (confirmDeleteAccountBtn) {
             switch (error.code) {
                 case 'auth/wrong-password':
                 case 'auth/invalid-credential':
-                    deleteAccountMessage.textContent = 'Gagal menghapus akun: tolong ganti password jika tidak tau.';
+                    deleteAccountMessage.textContent = 'Gagal menghapus akun: password salah.';
                     break;
                 case 'auth/requires-recent-login':
                     deleteAccountMessage.textContent = 'Untuk keamanan, silakan login ulang dan coba lagi.';
