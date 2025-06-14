@@ -20,13 +20,13 @@
     <header class="bg-white shadow-md py-4 px-6 md:px-12 lg:px-24">
         <div class="container mx-auto flex items-center justify-between flex-wrap gap-4">
             <!-- Logo Tokopedia atau Nama Situs -->
-            <a href="#" class="text-green-500 font-bold text-2xl rounded-md">
+            <a href="#" class="text-green-500 font-bold text-xl sm:text-2xl rounded-md">
                 <span class="bg-green-500 text-white px-2 py-1 rounded-l-md">Tokp</span><span
                     class="text-green-500 bg-white border border-green-500 px-2 py-1 rounded-r-md">edia</span>
             </a>
 
             <!-- Search Bar yang responsif -->
-            <div class="flex-grow max-w-xl mx-4">
+            <div class="w-full order-last md:order-none md:flex-grow md:max-w-xl md:mx-4">
                 <div class="relative w-full">
                     <input type="text" placeholder="Cari di Tokopedia..."
                         class="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
@@ -42,7 +42,7 @@
             </div>
 
             <!-- Ikon Navigasi (Keranjang, Notifikasi) dan Kontainer Tombol Auth/Profil -->
-            <div class="flex items-center space-x-6">
+            <div class="flex items-center space-x-2 sm:space-x-6">
                 <a href="#" class="text-gray-600 hover:text-green-600 relative">
                     <!-- Ikon keranjang belanja -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
@@ -62,21 +62,21 @@
                     </svg>
                 </a>
 
-                <!-- Kontainer untuk tombol Auth/Profil/Logout untuk menghindari flicker -->
+                <!-- Auth Buttons Container -->
                 <div id="auth-buttons-container" style="opacity: 0; transition: opacity 0.3s ease;">
                     <!-- Tombol untuk membuka modal login/daftar (visible when logged out) -->
                     <button id="auth-button-login"
-                        class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300">Login
+                        class="bg-green-500 text-white py-2 px-3 rounded-lg hover:bg-green-600 transition duration-300 text-sm sm:text-base">Login
                         / Daftar</button>
 
                     <!-- Tombol untuk membuka modal profil (visible when logged in) -->
                     <button id="auth-button-profile"
-                        class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300"
+                        class="bg-green-500 text-white py-2 px-3 rounded-lg hover:bg-green-600 transition duration-300 text-sm sm:text-base"
                         style="display: none;">Profil Saya</button>
 
                     <!-- Tombol Logout (visible when logged in) -->
                     <button id="auth-button-logout"
-                        class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300"
+                        class="bg-red-500 text-white py-2 px-3 rounded-lg hover:bg-red-600 transition duration-300 text-sm sm:text-base"
                         style="display: none;">Logout</button>
                 </div>
             </div>
@@ -226,6 +226,8 @@
                         class="font-semibold text-gray-900"></span></p>
                 <p class="text-lg text-gray-700">Peran: <span id="profile-role"
                         class="font-semibold text-gray-900"></span></p>
+                <p class="text-lg text-gray-700">Nama: <span id="profile-display-name"
+                        class="font-semibold text-gray-900"></span></p>
 
                 <button id="edit-profile-btn"
                     class="w-full bg-green-500 text-white p-3 rounded-md font-semibold hover:bg-green-600 transition duration-300 mt-4">Edit
@@ -253,6 +255,10 @@
                         <input type="file" id="profile-photo-input" accept="image/*" class="hidden">
                     </label>
                 </div>
+
+                <!-- Input Nama Tampilan Baru -->
+                <input type="text" id="edit-display-name" placeholder="Nama Tampilan Baru" autocomplete="name"
+                    class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400">
 
                 <input type="email" id="edit-email" placeholder="Email Baru" autocomplete="email"
                     class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400">
@@ -308,9 +314,9 @@
 
 
     <!-- Memuat file JavaScript kustom Anda di akhir body untuk performa yang lebih baik -->
-    <script type="module" src="../js/toko-online.js"></script>
     <script type="module" src="../js/auth.js"></script>
     <!-- Anda mungkin perlu file JS lain jika ada, seperti toko-online.js -->
+    <!-- Jika Anda memiliki file toko-online.js yang berisi script lain, pastikan untuk memuatnya juga -->
     <!-- <script src="../js/toko-online.js"></script> -->
 </body>
 
