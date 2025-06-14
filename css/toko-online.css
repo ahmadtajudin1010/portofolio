@@ -1,24 +1,126 @@
-/* style.css */
+/* ... CSS sebelumnya ... */
 
-/* Menggunakan font Inter untuk seluruh halaman */
-body {
-    font-family: 'Inter', sans-serif;
+/* Penyesuaian untuk main-nav dan tombol autentikasi */
+.main-nav {
+    display: flex; /* Mengatur tombol login/profil/logout berdampingan */
+    gap: 10px; /* Jarak antara tombol */
+    position: relative;
+    z-index: 1100;
 }
 
-/* Anda bisa menambahkan CSS kustom di sini jika tidak bisa diatasi dengan Tailwind */
-/* Contoh: Mengatur ketinggian minimum untuk elemen main agar footer selalu di bawah */
-main {
-    min-height: calc(100vh - 120px); /* Sesuaikan 120px jika header/footer Anda berubah ketinggian */
+.btn-auth {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    position: relative;
+    z-index: 1200;
 }
 
-/* Responsiveness sudah banyak ditangani oleh Tailwind CSS melalui breakpoint */
-/* Misalnya, penggunaan md:grid-cols-2 akan membuat tata letak berubah pada ukuran medium ke atas */
-/* Anda dapat menambahkan media queries di sini jika ada styling spesifik yang tidak tercakup Tailwind */
+.btn-auth:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
 
-/* @media (max-width: 768px) { */
-    /* Contoh: Menyesuaikan margin atau padding untuk perangkat mobile */
-    /* .container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    } */
-/* } */
+.btn-logout {
+    background-color: #dc3545; /* Merah untuk logout */
+}
+
+.btn-logout:hover {
+    background-color: #c82333;
+}
+
+.btn-delete {
+    background-color: #dc3545; /* Merah untuk hapus akun */
+    margin-top: 15px; /* Jarak dari tombol lain */
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+.btn-cancel {
+    background-color: #6c757d; /* Abu-abu untuk batal */
+    margin-left: 10px;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268;
+}
+
+/* Gaya untuk tombol profil dengan gambar */
+.profile-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px; /* Padding lebih kecil agar gambar lebih dominan */
+    width: 42px; /* Sesuaikan lebar dan tinggi agar berbentuk kotak untuk gambar 32x32px + padding */
+    height: 42px;
+    border-radius: 50%; /* Membuat tombol lingkaran */
+    overflow: hidden; /* Pastikan gambar tidak keluar dari batas lingkaran */
+    background-color: var(--primary-color); /* Latar belakang tombol */
+}
+
+.profile-btn:hover {
+    background-color: var(--secondary-color);
+    transform: none; /* Jangan geser saat hover, fokus pada efek gambar */
+}
+
+.profile-icon {
+    width: 32px; /* Ukuran ikon profil */
+    height: 32px;
+    border-radius: 50%; /* Membuat gambar lingkaran */
+    object-fit: cover; /* Memastikan gambar mengisi area tanpa terdistorsi */
+    border: 2px solid var(--text-light); /* Border putih tipis di sekitar gambar */
+}
+
+/* Gaya untuk foto profil di dalam modal */
+.profile-photo-lg {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 20px auto; /* Pusatkan dan berikan jarak bawah */
+    display: block; /* Pastikan elemen blok untuk margin auto */
+    border: 3px solid var(--primary-color);
+    box-shadow: var(--shadow-medium);
+}
+
+.profile-buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap; /* Izinkan wrap jika terlalu sempit */
+    justify-content: center;
+    gap: 10px; /* Jarak antar tombol */
+}
+
+/* ... CSS responsivitas lainnya ... */
+
+/* Tambahan responsivitas untuk tombol profil di mobile */
+@media (max-width: 768px) {
+    .profile-btn {
+        width: 38px; /* Sedikit lebih kecil di mobile */
+        height: 38px;
+        padding: 3px;
+    }
+
+    .profile-icon {
+        width: 28px; /* Sesuaikan ukuran ikon di mobile */
+        height: 28px;
+    }
+
+    .profile-photo-lg {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 15px;
+    }
+
+    .profile-buttons {
+        flex-direction: column; /* Tumpuk tombol secara vertikal di mobile */
+        gap: 10px;
+    }
+}
