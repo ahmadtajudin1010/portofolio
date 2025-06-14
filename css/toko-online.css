@@ -1,4 +1,97 @@
-/* ... CSS sebelumnya ... */
+/* Gaya Dasar (Variabel konsisten dengan beranda.css dan projects.css) */
+:root {
+    --primary-color: #007bff; /* Biru standar */
+    --secondary-color: #0056b3; /* Biru lebih gelap */
+    --accent-color: #00fbff; /* Biru terang */
+    --text-dark: #333;
+    --text-light: #ffffff;
+    --bg-light: #f4f7f6;
+    --bg-white: #fff;
+    --font-main: 'Poppins', sans-serif;
+    --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.15); /* Dipertebal sedikit */
+    --shadow-heavy: 0 8px 16px rgba(0, 0, 0, 0.25); /* Dipertebal */
+}
+
+body {
+    font-family: var(--font-main);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+h1, h2, h3 {
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+h1 {
+    font-size: 2.8em;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 2em;
+    text-align: center;
+}
+
+p {
+    margin-bottom: 20px;
+}
+
+/* Header Styling */
+.header {
+    background-color: var(--bg-white);
+    box-shadow: var(--shadow-light);
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header .container {
+    display: flex; /* Menggunakan flexbox untuk penyejajaran horizontal */
+    justify-content: space-between; /* Mendorong elemen ke ujung-ujung */
+    align-items: center; /* Menyelaraskan secara vertikal di tengah */
+    width: 100%; /* Pastikan container mengambil lebar penuh yang tersedia */
+}
+
+.site-title {
+    display: flex; /* Membuat site-title menjadi flex container untuk item di dalamnya */
+    align-items: center; /* Menyelaraskan item di dalamnya secara vertikal */
+    flex-shrink: 0; /* Mencegah site-title menyusut */
+}
+
+.back-to-projects {
+    display: flex; /* Pastikan ikon dan teks sejajar */
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back-to-projects:hover {
+    color: var(--secondary-color);
+    transform: translateX(-5px);
+}
+
+.back-to-projects i {
+    font-size: 1.2em;
+}
 
 /* Penyesuaian untuk main-nav dan tombol autentikasi */
 .main-nav {
@@ -6,6 +99,9 @@
     gap: 10px; /* Jarak antara tombol */
     position: relative;
     z-index: 1100;
+    align-items: center; /* Pastikan item di dalam nav juga sejajar */
+    justify-content: flex-end; /* Memastikan tombol-tombol berada di kanan dalam nav */
+    flex-grow: 1; /* Mengizinkan main-nav mengambil sisa ruang */
 }
 
 .btn-auth {
@@ -19,6 +115,7 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
     position: relative;
     z-index: 1200;
+    flex-shrink: 0; /* Mencegah tombol menyusut terlalu banyak */
 }
 
 .btn-auth:hover {
@@ -98,29 +195,535 @@
     gap: 10px; /* Jarak antar tombol */
 }
 
-/* ... CSS responsivitas lainnya ... */
+/* Section Daftar Produk Toko Online (konten utama) */
+.toko-products-section {
+    padding: 80px 0; /* Padding atas dan bawah */
+    background-color: var(--bg-light);
+    text-align: center; /* Untuk judul dan intro */
+}
 
-/* Tambahan responsivitas untuk tombol profil di mobile */
+.toko-products-section h1 {
+    margin-bottom: 20px;
+    color: var(--primary-color); /* Warna judul utama */
+}
+
+.product-intro {
+    max-width: 800px;
+    margin: 0 auto 40px auto;
+    font-size: 1.1em;
+    color: #555;
+    text-align: center;
+}
+
+.product-grid {
+    display: grid;
+    /* Ubah ini untuk tampilan mirip e-commerce */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Lebih banyak kolom, ukuran lebih kecil */
+    gap: 20px; /* Jarak antar kartu */
+    margin-top: 40px;
+}
+
+.product-item {
+    background-color: var(--bg-white);
+    border-radius: 8px; /* Lebih halus */
+    box-shadow: var(--shadow-medium); /* Shadow standar */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--text-dark);
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transisi lebih cepat */
+    border: 1px solid #eee; /* Border halus */
+    width: 100%; /* Memastikan item mengisi grid */
+}
+
+.product-item:hover {
+    transform: translateY(-5px); /* Efek naik lebih kecil */
+    box-shadow: var(--shadow-heavy); /* Bayangan lebih intens saat hover */
+}
+
+.product-item img {
+    width: 100%;
+    height: 180px; /* Tinggi gambar produk yang proporsional */
+    object-fit: cover;
+    display: block;
+    border-bottom: 1px solid #f0f0f0; /* Border bawah gambar */
+}
+
+.product-info {
+    padding: 15px; /* Padding lebih kecil */
+    text-align: left;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-info h3 {
+    margin-top: 0;
+    margin-bottom: 8px; /* Jarak lebih kecil */
+    font-size: 1.2em; /* Ukuran judul produk */
+    color: var(--text-dark);
+    line-height: 1.3;
+}
+
+.product-description {
+    font-size: 0.85em; /* Ukuran deskripsi lebih kecil */
+    color: #777;
+    margin-bottom: 10px; /* Jarak lebih kecil */
+    flex-grow: 1; /* Memungkinkan deskripsi menggunakan ruang yang tersedia */
+}
+
+.product-price {
+    font-size: 1.1em; /* Ukuran harga */
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-top: auto; /* Mendorong harga dan tombol ke bawah */
+    margin-bottom: 15px; /* Jarak antara harga dan tombol */
+}
+
+.btn-buy {
+    display: block;
+    background-color: #00AA5B; /* Warna hijau khas Tokopedia */
+    color: var(--text-light);
+    padding: 10px 15px; /* Padding lebih kecil */
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px; /* Lebih tajam */
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    font-weight: bold;
+    font-size: 0.95em;
+    margin-top: 5px; /* Jarak dari harga */
+    border: none;
+    cursor: pointer;
+}
+
+.btn-buy:hover {
+    background-color: #008F4F; /* Warna hijau lebih gelap saat hover */
+    transform: translateY(-1px);
+}
+
+/* Footer Styling (konsisten) */
+.footer {
+    background-color: var(--text-dark);
+    color: var(--text-light);
+    padding: 30px 0;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.footer p {
+    margin: 0;
+}
+
+/* Animasi untuk elemen yang muncul saat scroll */
+.fade-in-slide-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    transition-delay: 0s;
+}
+
+.fade-in-slide-up.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsivitas */
 @media (max-width: 768px) {
-    .profile-btn {
-        width: 38px; /* Sedikit lebih kecil di mobile */
-        height: 38px;
-        padding: 3px;
+    h1 {
+        font-size: 2.2em;
     }
 
-    .profile-icon {
-        width: 28px; /* Sesuaikan ukuran ikon di mobile */
-        height: 28px;
+    .toko-products-section {
+        padding: 50px 0; /* Sesuaikan padding di mobile */
     }
 
-    .profile-photo-lg {
-        width: 100px;
-        height: 100px;
+    .product-intro {
+        font-size: 1em;
+        margin-bottom: 30px;
+    }
+
+    .back-to-projects {
+        font-size: 0.9em;
+    }
+
+    .back-to-projects i {
+        font-size: 1em;
+    }
+
+    /* main-nav tidak lagi menggunakan menu-toggle di toko-online.html, jadi tidak perlu mengatur ulang display */
+    .product-grid {
+        /* Untuk mobile, gunakan kolom lebih sedikit atau satu kolom */
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* 2 kolom di HP */
+        gap: 15px; /* Jarak antar kartu lebih kecil di mobile */
+        padding: 0 10px; /* Padding horizontal lebih kecil */
+    }
+
+    .product-item img {
+        height: 120px; /* Tinggi gambar lebih kecil di mobile */
+    }
+
+    .product-info {
+        padding: 10px; /* Padding lebih kecil di mobile */
+    }
+
+    .product-info h3 {
+        font-size: 1em;
+        margin-bottom: 5px;
+    }
+
+    .product-description, .product-price {
+        font-size: 0.8em;
+        margin-bottom: 10px;
+    }
+
+    .btn-buy {
+        font-size: 0.9em;
+        padding: 8px 12px;
+    }
+
+    /* Responsivitas untuk modal di mobile */
+    .auth-modal-content {
+        width: 90%; /* Pastikan modal mengambil lebih banyak lebar di mobile */
+        padding: 20px;
+    }
+    .auth-modal-content h2 {
+        font-size: 1.5em; /* Ukuran judul modal di mobile */
         margin-bottom: 15px;
     }
+    .auth-modal-content input,
+    .auth-modal-content button[type="submit"] {
+        font-size: 0.9em;
+        padding: 10px;
+    }
+    .close-button {
+        font-size: 24px;
+        top: 10px;
+        right: 15px;
+        width: 24px; /* Sesuaikan ukuran area klik untuk mobile */
+        height: 24px;
+        line-height: 24px;
+    }
+    .auth-message {
+        font-size: 0.8em;
+        margin-top: 10px;
+    }
+    .auth-switch {
+        font-size: 0.8em;
+        margin-top: 15px;
+    }
 
-    .profile-buttons {
-        flex-direction: column; /* Tumpuk tombol secara vertikal di mobile */
+    /* Responsivitas untuk modal profil di mobile */
+    #profile-modal .auth-modal-content {
+        max-width: 95%;
+    }
+    #profile-display button,
+    #profile-edit-form button,
+    #change-password-form button,
+    #delete-account-confirmation button {
+        width: 100%; /* Tombol memenuhi lebar di mobile */
+        margin-top: 10px; /* Jarak antar tombol */
+        margin-left: 0; /* Hapus margin kiri untuk ratakan */
+    }
+    #profile-edit-form input,
+    #change-password-form input,
+    #delete-account-confirmation input {
+        width: calc(100% - 20px); /* Pastikan input mengisi lebar */
+    }
+}
+
+/* ----------- Gaya untuk Modal Otentikasi & Profil ----------- */
+.auth-modal {
+    /* Pastikan ini disembunyikan secara default dan hanya muncul saat 'open' */
+    display: none; /* Default: Sembunyi */
+    position: fixed;
+    z-index: 9999; /* Z-index yang sangat tinggi untuk memastikan di atas segalanya */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /* Tambahkan !important untuk memastikan aturan ini tidak ditimpa */
+    overflow: auto !important; 
+    background-color: rgba(0,0,0,0.6) !important;
+    /* Gunakan flex secara default di sini, tetapi atur opacity dan visibility untuk menyembunyikan */
+    display: flex; /* Selalu flex, agar transisi lebih mulus */
+    justify-content: center !important; /* Pusatkan secara horizontal */
+    align-items: center !important; /* Pusatkan secara vertikal */
+    /* Tambahkan transisi untuk efek fade */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.auth-modal.open {
+    display: flex !important; /* Ketika ada kelas 'open', tampilkan sebagai flexbox */
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.auth-modal-content {
+    background-color: var(--bg-white);
+    margin: auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+    /* Animasi muncul dari dalam (scale) */
+    transform: scale(0.9);
+    transition: transform 0.3s ease-out; /* Transisi untuk scale */
+}
+
+.auth-modal.open .auth-modal-content {
+    transform: scale(1); /* Kembali ke ukuran normal saat terbuka */
+}
+
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 15px; /* Jarak dari atas */
+    right: 20px; /* Jarak dari kanan */
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    display: flex; /* Gunakan flex untuk memusatkan 'X' di dalam area */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Pastikan di atas konten modal lainnya jika ada tumpang tindih */
+    width: 35px; /* Berikan lebar dan tinggi agar area klik lebih besar */
+    height: 35px;
+    border-radius: 50%; /* Membuatnya lingkaran */
+    background-color: rgba(255, 255, 255, 0.2); /* Sedikit latar belakang transparan */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: var(--text-dark);
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.auth-modal-content h2 {
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 2em;
+}
+
+.auth-modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.auth-modal-content input[type="email"],
+.auth-modal-content input[type="password"] {
+    width: calc(100% - 20px); /* Kurangi padding dari lebar total */
+    padding: 12px 10px;
+    margin: 0 auto; /* Tengah input */
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-modal-content input[type="email"]:focus,
+.auth-modal-content input[type="password"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.auth-modal-content button[type="submit"] {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+}
+
+.auth-modal-content button[type="submit"]:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.auth-message {
+    color: red;
+    margin-top: 15px;
+    font-size: 0.9em;
+    height: 1.2em;
+}
+
+.auth-message.success {
+    color: green;
+}
+
+.auth-switch {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.auth-switch span {
+    color: var(--primary-color);
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.auth-switch span:hover {
+    color: var(--secondary-color);
+}
+
+/* Tambahan gaya untuk pilihan peran */
+.user-type-selection {
+    text-align: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 0.95em;
+    color: var(--text-dark);
+}
+
+.user-type-selection label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.user-type-selection .radio-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 5px 0;
+}
+
+.user-type-selection input[type="radio"] {
+    margin-right: 5px;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.user-type-selection label[for="role-pembeli"],
+.user-type-selection label[for="role-penjual"] {
+    font-weight: normal;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* ----------- Gaya untuk Modal Profil ----------- */
+#profile-modal .auth-modal-content {
+    max-width: 500px; /* Sedikit lebih lebar untuk profil */
+}
+
+#profile-display p {
+    text-align: left;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color: #555;
+    word-break: break-all; /* Mencegah email panjang menyebabkan overflow */
+}
+
+#profile-display p span {
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+#profile-display button {
+    margin-top: 20px;
+    margin-bottom: 5px;
+    width: auto;
+    display: inline-block; /* Agar tombol bisa berdampingan jika ada ruang */
+}
+
+#profile-display button:last-child {
+    margin-bottom: 0;
+}
+
+/* Gaya untuk form edit/ubah password/hapus */
+#profile-edit-form h3,
+#change-password-form h3,
+#delete-account-confirmation h3 {
+    color: var(--primary-color);
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 1.6em;
+}
+
+.reauth-notice {
+    font-size: 0.9em;
+    color: #888;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.warning-text {
+    color: #dc3545; /* Merah untuk peringatan penting */
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Responsivitas untuk modal (lanjutan, memastikan tumpang tindih dengan aturan sebelumnya) */
+@media (max-width: 500px) {
+    .auth-modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+    .auth-modal-content h2 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+    .auth-modal-content input,
+    .auth-modal-content button[type="submit"] {
+        font-size: 0.95em;
+        padding: 10px;
+    }
+    .close-button {
+        font-size: 24px;
+        top: 10px;
+        right: 15px;
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+    }
+    .user-type-selection .radio-group {
+        flex-direction: column;
         gap: 10px;
+        align-items: flex-start;
+    }
+    
+    /* Tombol profil di mobile */
+    #profile-display button,
+    #profile-edit-form button,
+    #change-password-form button,
+    #delete-account-confirmation button {
+        display: block; /* Tombol menjadi blok penuh di mobile */
+        width: 100%;
+        margin-top: 10px;
+        margin-left: 0;
     }
 }
