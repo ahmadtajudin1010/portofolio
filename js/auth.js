@@ -52,6 +52,7 @@ const authButtonLogin = document.getElementById('auth-button-login');
 const authButtonProfile = document.getElementById('auth-button-profile');
 const authButtonLogout = document.getElementById('auth-button-logout');
 const authButtonsContainer = document.getElementById('auth-buttons-container');
+const headerProfilePhoto = document.getElementById('header-profile-photo'); // Elemen untuk foto di header
 
 const loginModal = document.getElementById('login-modal');
 const registerModal = document.getElementById('register-modal');
@@ -81,14 +82,14 @@ const switchToLoginLink = document.getElementById('switch-to-login');
 const profilePhotoDisplay = document.getElementById('profile-photo-display');
 const profileEmailSpan = document.getElementById('profile-email');
 const profileRoleSpan = document.getElementById('profile-role');
-const profileDisplayNameSpan = document.getElementById('profile-display-name'); // Elemen baru untuk menampilkan nama
+const profileDisplayNameSpan = document.getElementById('profile-display-name'); // Elemen untuk menampilkan nama
 const profileDisplay = document.getElementById('profile-display');
 
 const editProfileBtn = document.getElementById('edit-profile-btn');
 const profileEditForm = document.getElementById('profile-edit-form');
 const profilePhotoPreview = document.getElementById('profile-photo-preview');
 const profilePhotoInput = document.getElementById('profile-photo-input');
-const editDisplayNameInput = document.getElementById('edit-display-name'); // Elemen baru untuk input nama
+const editDisplayNameInput = document.getElementById('edit-display-name'); // Elemen untuk input nama
 const editEmailInput = document.getElementById('edit-email');
 const editProfileMessage = document.getElementById('edit-profile-message');
 const cancelEditBtn = document.getElementById('cancel-edit-btn');
@@ -96,7 +97,7 @@ const cancelEditBtn = document.getElementById('cancel-edit-btn');
 const changePasswordBtn = document.getElementById('change-password-btn');
 const changePasswordForm = document.getElementById('change-password-form');
 const currentPasswordReauthInput = document.getElementById('current-password-reauth');
-const newPasswordInput = document.getElementById('new-password');
+const newPasswordInput = document = document.getElementById('new-password');
 const confirmNewPasswordInput = document.getElementById('confirm-new-password');
 const changePasswordMessage = document.getElementById('change-password-message');
 const cancelPasswordChangeBtn = document.getElementById('cancel-password-change-btn');
@@ -119,58 +120,50 @@ const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
 const updateAuthButtonsVisibility = async (user) => {
     if (user) {
         authButtonLogin.style.display = 'none';
-        authButtonProfile.style.display = 'inline-block';
+        authButtonProfile.style.display = 'flex'; // Gunakan flex untuk menampung gambar saja
         authButtonLogout.style.display = 'inline-block';
 
         const userId = user.uid;
         const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
         const userProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profiles`, userId);
 
-        let userRole = 'Pengguna';
-        let photoURL = user.photoURL || 'https://placehold.co/120x120/CCCCCC/000000?text=Foto';
-        let displayName = user.displayName || user.email; // Gunakan display name dari Auth atau email default
+        let photoURL = user.photoURL || 'https://placehold.co/32x32/CCCCCC/000000?text=P'; // Ukuran dan teks default untuk header
 
         try {
             const docSnap = await getDoc(userProfileRef);
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                userRole = data.userType === 'penjual' ? 'Penjual' : 'Pembeli';
                 if (data.photoURL) {
                     photoURL = data.photoURL;
                 }
-                if (data.displayName) { // Ambil display name dari Firestore jika ada
-                    displayName = data.displayName;
-                }
             } else {
                 console.warn(`Dokumen profil untuk user ${userId} tidak ditemukan di Firestore. Membuat dengan peran default 'Pembeli'.`);
+                // Buat profil default jika tidak ada (penting untuk menjaga konsistensi data)
                 await setDoc(userProfileRef, {
                     userType: 'pembeli',
                     email: user.email || 'N/A',
-                    displayName: user.displayName || user.email.split('@')[0], // Set display name default
+                    displayName: user.displayName || user.email.split('@')[0],
                     photoURL: user.photoURL || null,
                     createdAt: new Date()
                 });
-                userRole = 'Pembeli (Otomatis)';
-                displayName = user.displayName || user.email.split('@')[0];
-                photoURL = user.photoURL || photoURL;
+                photoURL = user.photoURL || photoURL; // Gunakan foto dari Auth jika ada, atau default
             }
         } catch (error) {
             console.error("Error fetching or creating user role/photo in Firestore:", error);
-            userRole = 'Error (Lihat Konsol)';
+            // Tetap gunakan placeholder jika terjadi error
         }
-        authButtonProfile.textContent = `Profil Saya (${userRole})`; // Tetap ini untuk peran
-        // Jika Anda ingin menampilkan nama di header:
-        // authButtonProfile.textContent = `${displayName} (${userRole})`; 
-        if (profilePhotoDisplay) {
-            profilePhotoDisplay.src = photoURL;
+        
+        // Update foto di tombol header
+        if (headerProfilePhoto) {
+            headerProfilePhoto.src = photoURL;
         }
 
     } else {
         authButtonLogin.style.display = 'inline-block';
         authButtonProfile.style.display = 'none';
         authButtonLogout.style.display = 'none';
-        if (profilePhotoDisplay) {
-            profilePhotoDisplay.src = 'https://placehold.co/120x120/CCCCCC/000000?text=Foto';
+        if (headerProfilePhoto) {
+            headerProfilePhoto.src = 'https://placehold.co/32x32/CCCCCC/000000?text=P';
         }
     }
 };
@@ -713,6 +706,7 @@ if (profileEditForm) {
             profileEmailSpan.textContent = newEmail;
             profileDisplayNameSpan.textContent = newDisplayName; // Update nama tampilan di UI
             if (profilePhotoDisplay) profilePhotoDisplay.src = photoURLToSave;
+            if (headerProfilePhoto) headerProfilePhoto.src = photoURLToSave; // Update foto di header
 
             setTimeout(() => {
                 profileEditForm.classList.add('hidden');
