@@ -146,13 +146,19 @@ const updateAuthButtonsVisibility = async (user) => {
             } else {
                 console.warn(`Dokumen profil untuk user ${userId} tidak ditemukan di Firestore. Membuat dengan peran default 'Pembeli'.`);
                 // Buat profil default jika tidak ada (penting untuk menjaga konsistensi data)
+                // Menggunakan displayName dari Firebase Auth atau bagian email sebelum '@'
+                const initialDisplayName = user.displayName || user.email.split('@')[0];
                 await setDoc(userProfileRef, {
                     userType: 'pembeli',
                     email: user.email || 'N/A',
-                    displayName: user.displayName || user.email.split('@')[0],
+                    displayName: initialDisplayName,
                     photoURL: user.photoURL || null,
                     createdAt: new Date()
                 });
+                // Perbarui juga displayName di Firebase Authentication jika belum ada
+                if (!user.displayName) {
+                    await updateProfile(user, { displayName: initialDisplayName });
+                }
                 photoURL = user.photoURL || photoURL; // Gunakan foto dari Auth jika ada, atau default
             }
         } catch (error) {
@@ -203,6 +209,9 @@ const loadProfileData = async (user) => {
                 if (data.displayName) { // Ambil display name dari Firestore
                     currentDisplayName = data.displayName;
                     if (profileDisplayNameSpan) profileDisplayNameSpan.textContent = currentDisplayName; // Update display name di UI
+                } else if (user.displayName) {
+                    currentDisplayName = user.displayName;
+                    if (profileDisplayNameSpan) profileDisplayNameSpan.textContent = currentDisplayName;
                 }
             } else {
                 if (profileRoleSpan) profileRoleSpan.textContent = 'Tidak Ditemukan (Membuat Profil...)';
@@ -556,21 +565,30 @@ if (signInWithGoogleBtn) {
                 });
                 console.log('Profil Google baru disimpan ke Firestore.');
                 // Pastikan juga di Firebase Auth di-update (ini sering otomatis dari Google)
-                await updateProfile(user, { displayName: googleDisplayName });
+                if (user.displayName !== googleDisplayName) { // Hanya update jika berbeda
+                    await updateProfile(user, { displayName: googleDisplayName });
+                }
             } else {
                 console.log('Profil Google sudah ada di Firestore.');
                 // Perbarui photoURL dan displayName jika ada perubahan dari Google Auth
-                // Ambil display name dari Firestore, jika ada, kalau tidak dari Auth
-                let updatedDisplayName = docSnap.data().displayName || user.displayName; 
-                if (user.displayName && docSnap.data().displayName !== user.displayName) {
-                    updatedDisplayName = user.displayName;
+                const data = docSnap.data();
+                let updatedDisplayNameInFirestore = data.displayName;
+                let updatedPhotoURLInFirestore = data.photoURL;
+
+                // Perbarui displayName di Firestore jika Auth displayName berbeda dan Auth displayName ada
+                if (user.displayName && data.displayName !== user.displayName) {
+                    updatedDisplayNameInFirestore = user.displayName;
                 }
-                
-                if (user.photoURL && docSnap.data().photoURL !== user.photoURL || 
-                    updatedDisplayName !== docSnap.data().displayName) {
+                // Perbarui photoURL di Firestore jika Auth photoURL berbeda dan Auth photoURL ada
+                if (user.photoURL && data.photoURL !== user.photoURL) {
+                    updatedPhotoURLInFirestore = user.photoURL;
+                }
+
+                // Lakukan update Firestore hanya jika ada perubahan yang terdeteksi
+                if (updatedDisplayNameInFirestore !== data.displayName || updatedPhotoURLInFirestore !== data.photoURL) {
                     await updateDoc(userProfileRef, { 
-                        photoURL: user.photoURL || null,
-                        displayName: updatedDisplayName
+                        photoURL: updatedPhotoURLInFirestore || null,
+                        displayName: updatedDisplayNameInFirestore
                     });
                     console.log('PhotoURL/DisplayName pengguna Google diperbarui di Firestore.');
                 }
