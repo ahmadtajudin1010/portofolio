@@ -65,7 +65,6 @@ p {
     display: flex; /* Menggunakan flexbox untuk penyejajaran horizontal */
     justify-content: space-between; /* Mendorong elemen ke ujung-ujung */
     align-items: center; /* Menyelaraskan secara vertikal di tengah */
-    /* Menghapus 'width: 100%;' di sini karena container sudah punya max-width */
 }
 
 /* Penyesuaian untuk logo "Toko Online" */
@@ -73,7 +72,6 @@ p {
     display: flex;
     align-items: center;
     flex-shrink: 0; /* Mencegah logo menyusut */
-    /* Hapus gaya Tailwind CSS di HTML untuk ini, gunakan CSS kustom */
 }
 
 .logo span:first-child {

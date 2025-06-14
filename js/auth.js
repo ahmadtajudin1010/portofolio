@@ -51,7 +51,7 @@ const db = getFirestore(app);
 const authButtonLogin = document.getElementById('auth-button-login');
 const authButtonProfile = document.getElementById('auth-button-profile');
 const authButtonLogout = document.getElementById('auth-button-logout');
-const authButtonsContainer = document.getElementById('auth-buttons-container');
+const authButtonsContainer = document.getElementById('auth-buttons-container'); // Pastikan ini ada di HTML sekarang!
 const headerProfilePhoto = document.getElementById('header-profile-photo'); // Elemen untuk foto di header
 
 const loginModal = document.getElementById('login-modal');
@@ -97,7 +97,7 @@ const cancelEditBtn = document.getElementById('cancel-edit-btn');
 const changePasswordBtn = document.getElementById('change-password-btn');
 const changePasswordForm = document.getElementById('change-password-form');
 const currentPasswordReauthInput = document.getElementById('current-password-reauth');
-const newPasswordInput = document.getElementById('new-password');
+const newPasswordInput = document.getElementById('new-password'); // Diperbaiki: Hapus `document = ` yang salah
 const confirmNewPasswordInput = document.getElementById('confirm-new-password');
 const changePasswordMessage = document.getElementById('change-password-message');
 const cancelPasswordChangeBtn = document.getElementById('cancel-password-change-btn');
@@ -118,16 +118,17 @@ const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
  * @param {Object} user - Objek pengguna Firebase saat ini.
  */
 const updateAuthButtonsVisibility = async (user) => {
-    // Debugging: Cek apakah elemen authButtonsContainer ditemukan
+    // Pastikan authButtonsContainer ada sebelum mencoba mengubah opacity atau display
     if (!authButtonsContainer) {
-        console.error("Elemen 'auth-buttons-container' tidak ditemukan di DOM!");
-        return; // Hentikan eksekusi jika elemen tidak ada
+        console.error("Elemen 'auth-buttons-container' tidak ditemukan di DOM saat updateAuthButtonsVisibility!");
+        return; 
     }
 
     if (user) {
-        authButtonLogin.style.display = 'none';
-        authButtonProfile.style.display = 'flex'; // Gunakan flex untuk menampung gambar saja
-        authButtonLogout.style.display = 'inline-block';
+        // Hanya tampilkan tombol-tombol jika user sudah diinisialisasi
+        if (authButtonLogin) authButtonLogin.style.display = 'none';
+        if (authButtonProfile) authButtonProfile.style.display = 'flex'; // Gunakan flex untuk menampung gambar saja
+        if (authButtonLogout) authButtonLogout.style.display = 'inline-block';
 
         const userId = user.uid;
         const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
@@ -165,9 +166,10 @@ const updateAuthButtonsVisibility = async (user) => {
         }
 
     } else {
-        authButtonLogin.style.display = 'inline-block';
-        authButtonProfile.style.display = 'none';
-        authButtonLogout.style.display = 'none';
+        // Jika tidak ada user (logged out)
+        if (authButtonLogin) authButtonLogin.style.display = 'inline-block';
+        if (authButtonProfile) authButtonProfile.style.display = 'none';
+        if (authButtonLogout) authButtonLogout.style.display = 'none';
         if (headerProfilePhoto) {
             headerProfilePhoto.src = 'https://placehold.co/32x32/CCCCCC/000000?text=P';
         }
@@ -180,8 +182,8 @@ const updateAuthButtonsVisibility = async (user) => {
  */
 const loadProfileData = async (user) => {
     if (user) {
-        profileEmailSpan.textContent = user.email;
-        profileDisplayNameSpan.textContent = user.displayName || 'Nama Tidak Disetel'; // Tampilkan nama dari Auth
+        if (profileEmailSpan) profileEmailSpan.textContent = user.email;
+        if (profileDisplayNameSpan) profileDisplayNameSpan.textContent = user.displayName || 'Nama Tidak Disetel'; // Tampilkan nama dari Auth
 
         const userId = user.uid;
         const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
@@ -194,20 +196,20 @@ const loadProfileData = async (user) => {
             const docSnap = await getDoc(userProfileRef);
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                profileRoleSpan.textContent = data.userType === 'penjual' ? 'Penjual' : 'Pembeli';
+                if (profileRoleSpan) profileRoleSpan.textContent = data.userType === 'penjual' ? 'Penjual' : 'Pembeli';
                 if (data.photoURL) {
                     currentPhotoURL = data.photoURL;
                 }
                 if (data.displayName) { // Ambil display name dari Firestore
                     currentDisplayName = data.displayName;
-                    profileDisplayNameSpan.textContent = currentDisplayName; // Update display name di UI
+                    if (profileDisplayNameSpan) profileDisplayNameSpan.textContent = currentDisplayName; // Update display name di UI
                 }
             } else {
-                profileRoleSpan.textContent = 'Tidak Ditemukan (Membuat Profil...)';
+                if (profileRoleSpan) profileRoleSpan.textContent = 'Tidak Ditemukan (Membuat Profil...)';
             }
         } catch (error) {
             console.error("Error loading profile data from Firestore:", error);
-            profileRoleSpan.textContent = 'Error (Lihat Konsol)';
+            if (profileRoleSpan) profileRoleSpan.textContent = 'Error (Lihat Konsol)';
         }
 
         if (profilePhotoDisplay) profilePhotoDisplay.src = currentPhotoURL;
@@ -221,38 +223,50 @@ const loadProfileData = async (user) => {
  * Menutup semua modal dan mereset form.
  */
 const closeAllModalsAndResetForms = () => {
-    loginModal.classList.add('hidden');
-    registerModal.classList.add('hidden');
-    profileModal.classList.add('hidden');
+    if (loginModal) loginModal.classList.add('hidden');
+    if (registerModal) registerModal.classList.add('hidden');
+    if (profileModal) profileModal.classList.add('hidden');
 
-    authMessage.textContent = '';
-    authMessage.className = 'text-red-500 text-sm mt-4 text-center';
-    registerMessage.textContent = '';
-    registerMessage.className = 'text-red-500 text-sm mt-4 text-center';
-    editProfileMessage.textContent = '';
-    editProfileMessage.className = 'text-red-500 text-sm mt-4 text-center';
-    changePasswordMessage.textContent = '';
-    changePasswordMessage.className = 'text-red-500 text-sm mt-4 text-center';
-    deleteAccountMessage.textContent = '';
-    deleteAccountMessage.className = 'text-red-500 text-sm mt-4 text-center';
+    if (authMessage) {
+        authMessage.textContent = '';
+        authMessage.className = 'text-red-500 text-sm mt-4 text-center';
+    }
+    if (registerMessage) {
+        registerMessage.textContent = '';
+        registerMessage.className = 'text-red-500 text-sm mt-4 text-center';
+    }
+    if (editProfileMessage) {
+        editProfileMessage.textContent = '';
+        editProfileMessage.className = 'text-red-500 text-sm mt-4 text-center';
+    }
+    if (changePasswordMessage) {
+        changePasswordMessage.textContent = '';
+        changePasswordMessage.className = 'text-red-500 text-sm mt-4 text-center';
+    }
+    if (deleteAccountMessage) {
+        deleteAccountMessage.textContent = '';
+        deleteAccountMessage.className = 'text-red-500 text-sm mt-4 text-center';
+    }
 
-    authForm.reset();
-    registerForm.reset();
-    profileEditForm.reset();
-    changePasswordForm.reset();
-    deletePasswordReauthInput.value = '';
-    profilePhotoInput.value = '';
+    if (authForm) authForm.reset();
+    if (registerForm) registerForm.reset();
+    if (profileEditForm) profileEditForm.reset();
+    if (changePasswordForm) changePasswordForm.reset();
+    if (deletePasswordReauthInput) deletePasswordReauthInput.value = '';
+    if (profilePhotoInput) profilePhotoInput.value = '';
 
     if (resetPasswordLinkContainer) {
         resetPasswordLinkContainer.style.display = 'none';
     }
 
-    profileDisplay.classList.remove('hidden');
-    profileEditForm.classList.add('hidden');
-    changePasswordForm.classList.add('hidden');
-    deleteAccountConfirmation.classList.add('hidden');
+    if (profileDisplay) profileDisplay.classList.remove('hidden');
+    if (profileEditForm) profileEditForm.classList.add('hidden');
+    if (changePasswordForm) changePasswordForm.classList.add('hidden');
+    if (deleteAccountConfirmation) deleteAccountConfirmation.classList.add('hidden');
 
-    if (profilePhotoPreview) profilePhotoPreview.src = 'https://placehold.co/120x120/CCCCCC/000000?text=Foto';
+    if (profilePhotoPreview && profilePhotoDisplay) {
+        profilePhotoPreview.src = profilePhotoDisplay.src; // Pastikan pratinjau kembali ke foto awal
+    }
 };
 
 
@@ -261,15 +275,27 @@ const closeAllModalsAndResetForms = () => {
 // Inisialisasi otentikasi dengan custom token atau anonim
 const initializeAuth = async () => {
     try {
+        const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
+        console.log(`__app_id: ${appId}`); // Log APP ID
+
+        // Jika __initial_auth_token didefinisikan dan memiliki nilai (bukan undefined/null/kosong)
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            console.log('Attempting to sign in with custom token...');
             await signInWithCustomToken(auth, __initial_auth_token);
-            console.log('Signed in with custom token.');
+            console.log('Signed in with custom token successfully.');
         } else {
+            console.log('__initial_auth_token not provided or empty. Attempting to sign in anonymously...');
             await signInAnonymously(auth);
-            console.log('Signed in anonymously.');
+            console.log('Signed in anonymously successfully.');
         }
     } catch (error) {
         console.error('Error during initial Firebase authentication:', error);
+        // Tambahkan saran untuk mengaktifkan Anonymous Auth jika ini sering terjadi
+        if (error.code === 'auth/admin-restricted-operation') {
+            console.warn('Firebase Error: auth/admin-restricted-operation. Ini berarti operasi autentikasi (seperti Anonymous Auth atau signInWithCustomToken) dibatasi oleh pengaturan keamanan Firebase Anda. Pastikan Anonymous Authentication diaktifkan di Firebase Console (Authentication -> Sign-in method tab) atau bahwa token kustom Anda valid dan domain aplikasi Anda terdaftar di daftar domain yang diizinkan di Firebase.');
+        } else if (error.code === 'auth/unauthorized-domain') {
+            console.warn('Firebase Error: auth/unauthorized-domain. Domain aplikasi Anda tidak terdaftar di Firebase Console Anda. Tambahkan URL hosting Anda ke daftar "Authorized domains" di Authentication -> Settings.');
+        }
     }
 };
 
@@ -281,7 +307,7 @@ onAuthStateChanged(auth, (user) => {
     console.log('onAuthStateChanged triggered. User:', user ? user.email || user.uid : 'null');
     updateAuthButtonsVisibility(user); // Panggil untuk memperbarui UI header
 
-    // Debugging: Pastikan authButtonsContainer ada sebelum mengubah opacity
+    // Pastikan authButtonsContainer ada sebelum mengubah opacity
     if (authButtonsContainer) {
         authButtonsContainer.style.opacity = '1';
         console.log("auth-buttons-container opacity set to 1.");
@@ -313,9 +339,9 @@ window.addEventListener('click', (event) => {
 
 if (authButtonLogin) {
     authButtonLogin.addEventListener('click', () => {
-        loginModal.classList.remove('hidden');
-        authMessage.textContent = '';
-        authForm.reset();
+        if (loginModal) loginModal.classList.remove('hidden');
+        if (authMessage) authMessage.textContent = '';
+        if (authForm) authForm.reset();
         if (resetPasswordLinkContainer) {
             resetPasswordLinkContainer.style.display = 'none';
         }
@@ -324,26 +350,26 @@ if (authButtonLogin) {
 
 if (switchToRegisterLink) {
     switchToRegisterLink.addEventListener('click', () => {
-        loginModal.classList.add('hidden');
-        registerModal.classList.remove('hidden');
-        authMessage.textContent = '';
-        authForm.reset();
+        if (loginModal) loginModal.classList.add('hidden');
+        if (registerModal) registerModal.classList.remove('hidden');
+        if (authMessage) authMessage.textContent = '';
+        if (authForm) authForm.reset();
     });
 }
 
 if (switchToLoginLink) {
     switchToLoginLink.addEventListener('click', () => {
-        registerModal.classList.add('hidden');
-        loginModal.classList.remove('hidden');
-        registerMessage.textContent = '';
-        registerForm.reset();
+        if (registerModal) registerModal.classList.add('hidden');
+        if (loginModal) loginModal.classList.remove('hidden');
+        if (registerMessage) registerMessage.textContent = '';
+        if (registerForm) registerForm.reset();
     });
 }
 
 if (authForm) {
     authForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-        authMessage.textContent = '';
+        if (authMessage) authMessage.textContent = '';
         if (resetPasswordLinkContainer) {
             resetPasswordLinkContainer.style.display = 'none';
         }
@@ -353,29 +379,31 @@ if (authForm) {
 
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            authMessage.textContent = 'Login berhasil!';
-            authMessage.className = 'text-green-500 text-sm mt-4 text-center';
+            if (authMessage) {
+                authMessage.textContent = 'Login berhasil!';
+                authMessage.className = 'text-green-500 text-sm mt-4 text-center';
+            }
             setTimeout(closeAllModalsAndResetForms, 1500);
         } catch (error) {
             console.error('Error saat login:', error.code, error.message);
-            authMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (authMessage) authMessage.className = 'text-red-500 text-sm mt-4 text-center';
             switch (error.code) {
                 case 'auth/user-not-found':
                 case 'auth/wrong-password':
                 case 'auth/invalid-credential':
-                    authMessage.textContent = 'Login gagal: Email atau password salah.';
+                    if (authMessage) authMessage.textContent = 'Login gagal: Email atau password salah.';
                     if (resetPasswordLinkContainer) {
                         resetPasswordLinkContainer.style.display = 'block';
                     }
                     break;
                 case 'auth/invalid-email':
-                    authMessage.textContent = 'Format email tidak valid.';
+                    if (authMessage) authMessage.textContent = 'Format email tidak valid.';
                     break;
                 case 'auth/too-many-requests':
-                    authMessage.textContent = 'Terlalu banyak percobaan login. Coba lagi nanti.';
+                    if (authMessage) authMessage.textContent = 'Terlalu banyak percobaan login. Coba lagi nanti.';
                     break;
                 default:
-                    authMessage.textContent = `Login gagal: ${error.message}`;
+                    if (authMessage) authMessage.textContent = `Login gagal: ${error.message}`;
                     break;
             }
         }
@@ -386,31 +414,37 @@ if (resetPasswordLink) {
     resetPasswordLink.addEventListener('click', async () => {
         const email = authEmailInput.value;
         if (email) {
-            authMessage.textContent = 'Mengirim link reset password...';
-            authMessage.className = 'text-blue-500 text-sm mt-4 text-center';
+            if (authMessage) {
+                authMessage.textContent = 'Mengirim link reset password...';
+                authMessage.className = 'text-blue-500 text-sm mt-4 text-center';
+            }
             try {
                 await sendPasswordResetEmail(auth, email);
-                authMessage.textContent = 'Link reset password telah dikirim ke email Anda!';
-                authMessage.className = 'text-green-500 text-sm mt-4 text-center';
+                if (authMessage) {
+                    authMessage.textContent = 'Link reset password telah dikirim ke email Anda!';
+                    authMessage.className = 'text-green-500 text-sm mt-4 text-center';
+                }
                 if (resetPasswordLinkContainer) {
                     resetPasswordLinkContainer.style.display = 'none';
                 }
             } catch (error) {
                 console.error('Error mengirim reset password:', error.code, error.message);
-                authMessage.className = 'text-red-500 text-sm mt-4 text-center';
+                if (authMessage) authMessage.className = 'text-red-500 text-sm mt-4 text-center';
                 switch (error.code) {
                     case 'auth/invalid-email':
                     case 'auth/user-not-found':
-                        authMessage.textContent = 'Email tidak terdaftar atau tidak valid. Silakan coba email lain.';
+                        if (authMessage) authMessage.textContent = 'Email tidak terdaftar atau tidak valid. Silakan coba email lain.';
                         break;
                     default:
-                        authMessage.textContent = `Gagal mengirim link reset password: ${error.message}`;
+                        if (authMessage) authMessage.textContent = `Gagal mengirim link reset password: ${error.message}`;
                         break;
                 }
             }
         } else {
-            authMessage.textContent = 'Masukkan email Anda di kolom login untuk mereset password.';
-            authMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (authMessage) {
+                authMessage.textContent = 'Masukkan email Anda di kolom login untuk mereset password.';
+                authMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            }
         }
     });
 }
@@ -420,19 +454,23 @@ if (resetPasswordLink) {
 if (registerForm) {
     registerForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-        registerMessage.textContent = '';
+        if (registerMessage) registerMessage.textContent = '';
         const email = registerEmailInput.value;
         const password = registerPasswordInput.value;
         const confirmPassword = registerConfirmPasswordInput.value;
 
         if (password !== confirmPassword) {
-            registerMessage.textContent = 'Password tidak cocok.';
-            registerMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (registerMessage) {
+                registerMessage.textContent = 'Password tidak cocok.';
+                registerMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            }
             return;
         }
         if (password.length < 6) {
-            registerMessage.textContent = 'Password minimal 6 karakter.';
-            registerMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (registerMessage) {
+                registerMessage.textContent = 'Password minimal 6 karakter.';
+                registerMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            }
             return;
         }
 
@@ -460,27 +498,29 @@ if (registerForm) {
             });
 
 
-            registerMessage.textContent = 'Pendaftaran berhasil! Anda akan otomatis login.';
-            registerMessage.className = 'text-green-500 text-sm mt-4 text-center';
+            if (registerMessage) {
+                registerMessage.textContent = 'Pendaftaran berhasil! Anda akan otomatis login.';
+                registerMessage.className = 'text-green-500 text-sm mt-4 text-center';
+            }
             setTimeout(() => {
-                registerModal.classList.add('hidden');
-                registerForm.reset();
+                if (registerModal) registerModal.classList.add('hidden');
+                if (registerForm) registerForm.reset();
             }, 1500);
         } catch (error) {
             console.error('Error saat daftar:', error.code, error.message);
-            registerMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (registerMessage) registerMessage.className = 'text-red-500 text-sm mt-4 text-center';
             switch (error.code) {
                 case 'auth/email-already-in-use':
-                    registerMessage.textContent = 'Email sudah terdaftar. Silakan login.';
+                    if (registerMessage) registerMessage.textContent = 'Email sudah terdaftar. Silakan login.';
                     break;
                 case 'auth/invalid-email':
-                    registerMessage.textContent = 'Format email tidak valid.';
+                    if (registerMessage) registerMessage.textContent = 'Format email tidak valid.';
                     break;
                 case 'auth/weak-password':
-                    registerMessage.textContent = 'Password terlalu lemah (minimal 6 karakter).';
+                    if (registerMessage) registerMessage.textContent = 'Password terlalu lemah (minimal 6 karakter).';
                     break;
                 default:
-                    registerMessage.textContent = `Pendaftaran gagal: ${error.message}`;
+                    if (registerMessage) registerMessage.textContent = `Pendaftaran gagal: ${error.message}`;
                     break;
             }
         }
@@ -490,7 +530,7 @@ if (registerForm) {
 // Login dengan Google
 if (signInWithGoogleBtn) {
     signInWithGoogleBtn.addEventListener('click', async () => {
-        authMessage.textContent = '';
+        if (authMessage) authMessage.textContent = '';
         if (resetPasswordLinkContainer) {
             resetPasswordLinkContainer.style.display = 'none';
         }
@@ -536,24 +576,26 @@ if (signInWithGoogleBtn) {
                 }
             }
 
-            authMessage.textContent = 'Login dengan Google berhasil!';
-            authMessage.className = 'text-green-500 text-sm mt-4 text-center';
+            if (authMessage) {
+                authMessage.textContent = 'Login dengan Google berhasil!';
+                authMessage.className = 'text-green-500 text-sm mt-4 text-center';
+            }
             setTimeout(closeAllModalsAndResetForms, 1500);
         } catch (error) {
             console.error('Error saat login dengan Google:', error.code, error.message);
-            authMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (authMessage) authMessage.className = 'text-red-500 text-sm mt-4 text-center';
             switch (error.code) {
                 case 'auth/popup-closed-by-user':
-                    authMessage.textContent = 'Login Google dibatalkan.';
+                    if (authMessage) authMessage.textContent = 'Login Google dibatalkan.';
                     break;
                 case 'auth/cancelled-popup-request':
-                    authMessage.textContent = 'Permintaan login Google sudah ada yang tertunda.';
+                    if (authMessage) authMessage.textContent = 'Permintaan login Google sudah ada yang tertunda.';
                     break;
                 case 'auth/account-exists-with-different-credential':
-                    authMessage.textContent = 'Akun dengan email ini sudah ada dengan kredensial berbeda.';
+                    if (authMessage) authMessage.textContent = 'Akun dengan email ini sudah ada dengan kredensial berbeda.';
                     break;
                 default:
-                    authMessage.textContent = `Login Google gagal: ${error.message}`;
+                    if (authMessage) authMessage.textContent = `Login Google gagal: ${error.message}`;
                     break;
             }
         }
@@ -578,17 +620,17 @@ if (authButtonProfile) {
         const user = auth.currentUser;
         if (user) {
             loadProfileData(user);
-            profileModal.classList.remove('hidden');
-            profileDisplay.classList.remove('hidden');
-            profileEditForm.classList.add('hidden');
-            changePasswordForm.classList.add('hidden');
-            deleteAccountConfirmation.classList.add('hidden');
-            editProfileMessage.textContent = '';
-            changePasswordMessage.textContent = '';
-            deleteAccountMessage.textContent = '';
-            profilePhotoInput.value = '';
+            if (profileModal) profileModal.classList.remove('hidden');
+            if (profileDisplay) profileDisplay.classList.remove('hidden');
+            if (profileEditForm) profileEditForm.classList.add('hidden');
+            if (changePasswordForm) changePasswordForm.classList.add('hidden');
+            if (deleteAccountConfirmation) deleteAccountConfirmation.classList.add('hidden');
+            if (editProfileMessage) editProfileMessage.textContent = '';
+            if (changePasswordMessage) changePasswordMessage.textContent = '';
+            if (deleteAccountMessage) deleteAccountMessage.textContent = '';
+            if (profilePhotoInput) profilePhotoInput.value = '';
         } else {
-            loginModal.classList.remove('hidden');
+            if (loginModal) loginModal.classList.remove('hidden');
         }
     });
 }
@@ -598,14 +640,14 @@ if (authButtonProfile) {
 
 if (editProfileBtn) {
     editProfileBtn.addEventListener('click', () => {
-        profileDisplay.classList.add('hidden');
-        profileEditForm.classList.remove('hidden');
+        if (profileDisplay) profileDisplay.classList.add('hidden');
+        if (profileEditForm) profileEditForm.classList.remove('hidden');
         const user = auth.currentUser;
         if (user) {
-            editEmailInput.value = user.email;
-            editDisplayNameInput.value = user.displayName || ''; // Isi input nama dengan nama Auth saat ini
+            if (editEmailInput) editEmailInput.value = user.email;
+            if (editDisplayNameInput) editDisplayNameInput.value = user.displayName || ''; // Isi input nama dengan nama Auth saat ini
         }
-        editProfileMessage.textContent = '';
+        if (editProfileMessage) editProfileMessage.textContent = '';
         if (profilePhotoPreview && profilePhotoDisplay) {
             profilePhotoPreview.src = profilePhotoDisplay.src;
         }
@@ -634,11 +676,11 @@ if (profilePhotoInput) {
 
 if (cancelEditBtn) {
     cancelEditBtn.addEventListener('click', () => {
-        profileEditForm.classList.add('hidden');
-        profileDisplay.classList.remove('hidden');
-        editProfileMessage.textContent = '';
-        profileEditForm.reset();
-        profilePhotoInput.value = '';
+        if (profileEditForm) profileEditForm.classList.add('hidden');
+        if (profileDisplay) profileDisplay.classList.remove('hidden');
+        if (editProfileMessage) editProfileMessage.textContent = '';
+        if (profileEditForm) profileEditForm.reset();
+        if (profilePhotoInput) profilePhotoInput.value = '';
         if (profilePhotoPreview && profilePhotoDisplay) {
             profilePhotoPreview.src = profilePhotoDisplay.src;
         }
@@ -648,8 +690,10 @@ if (cancelEditBtn) {
 if (profileEditForm) {
     profileEditForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-        editProfileMessage.textContent = 'Menyimpan perubahan...';
-        editProfileMessage.className = 'text-blue-500 text-sm mt-4 text-center';
+        if (editProfileMessage) {
+            editProfileMessage.textContent = 'Menyimpan perubahan...';
+            editProfileMessage.className = 'text-blue-500 text-sm mt-4 text-center';
+        }
         
         const newEmail = editEmailInput.value;
         const newDisplayName = editDisplayNameInput.value.trim(); // Ambil nama baru
@@ -657,8 +701,10 @@ if (profileEditForm) {
         const file = profilePhotoInput.files[0];
 
         if (!user) {
-            editProfileMessage.textContent = 'Anda tidak terautentikasi.';
-            editProfileMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (editProfileMessage) {
+                editProfileMessage.textContent = 'Anda tidak terautentikasi.';
+                editProfileMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            }
             return;
         }
 
@@ -711,17 +757,19 @@ if (profileEditForm) {
             await updateDoc(userProfileRef, updateData);
             console.log('Data profil di Firestore berhasil diperbarui.');
 
-            editProfileMessage.textContent = 'Profil berhasil diperbarui!';
-            editProfileMessage.className = 'text-green-500 text-sm mt-4 text-center';
-            profileEmailSpan.textContent = newEmail;
-            profileDisplayNameSpan.textContent = newDisplayName; // Update nama tampilan di UI
+            if (editProfileMessage) {
+                editProfileMessage.textContent = 'Profil berhasil diperbarui!';
+                editProfileMessage.className = 'text-green-500 text-sm mt-4 text-center';
+            }
+            if (profileEmailSpan) profileEmailSpan.textContent = newEmail;
+            if (profileDisplayNameSpan) profileDisplayNameSpan.textContent = newDisplayName; // Update nama tampilan di UI
             if (profilePhotoDisplay) profilePhotoDisplay.src = photoURLToSave;
             if (headerProfilePhoto) headerProfilePhoto.src = photoURLToSave; // Update foto di header
 
             setTimeout(() => {
-                profileEditForm.classList.add('hidden');
-                profileDisplay.classList.remove('hidden');
-                profilePhotoInput.value = '';
+                if (profileEditForm) profileEditForm.classList.add('hidden');
+                if (profileDisplay) profileDisplay.classList.remove('hidden');
+                if (profilePhotoInput) profilePhotoInput.value = '';
                 if (profilePhotoPreview && profilePhotoDisplay) {
                     profilePhotoPreview.src = profilePhotoDisplay.src;
                 }
@@ -729,7 +777,7 @@ if (profileEditForm) {
 
         } catch (error) {
             console.error('Error saat memperbarui profil:', error.code, error.message);
-            editProfileMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (editProfileMessage) editProfileMessage.className = 'text-red-500 text-sm mt-4 text-center';
             let errorMessage = 'Gagal memperbarui profil. Silakan coba lagi.';
             switch (error.code) {
                 case 'auth/invalid-email':
@@ -752,7 +800,7 @@ if (profileEditForm) {
                     }
                     break;
             }
-            editProfileMessage.textContent = errorMessage;
+            if (editProfileMessage) editProfileMessage.textContent = errorMessage;
         }
     });
 }
@@ -762,46 +810,52 @@ if (profileEditForm) {
 
 if (changePasswordBtn) {
     changePasswordBtn.addEventListener('click', () => {
-        profileDisplay.classList.add('hidden');
-        changePasswordForm.classList.remove('hidden');
-        changePasswordMessage.textContent = '';
-        currentPasswordReauthInput.value = '';
-        newPasswordInput.value = '';
-        confirmNewPasswordInput.value = '';
+        if (profileDisplay) profileDisplay.classList.add('hidden');
+        if (changePasswordForm) changePasswordForm.classList.remove('hidden');
+        if (changePasswordMessage) changePasswordMessage.textContent = '';
+        if (currentPasswordReauthInput) currentPasswordReauthInput.value = '';
+        if (newPasswordInput) newPasswordInput.value = '';
+        if (confirmNewPasswordInput) confirmNewPasswordInput.value = '';
     });
 }
 
 if (cancelPasswordChangeBtn) {
     cancelPasswordChangeBtn.addEventListener('click', () => {
-        changePasswordForm.classList.add('hidden');
-        profileDisplay.classList.remove('hidden');
-        changePasswordMessage.textContent = '';
-        changePasswordForm.reset();
+        if (changePasswordForm) changePasswordForm.classList.add('hidden');
+        if (profileDisplay) profileDisplay.classList.remove('hidden');
+        if (changePasswordMessage) changePasswordMessage.textContent = '';
+        if (changePasswordForm) changePasswordForm.reset();
     });
 }
 
 if (changePasswordForm) {
     changePasswordForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-        changePasswordMessage.textContent = '';
+        if (changePasswordMessage) changePasswordMessage.textContent = '';
         const currentPassword = currentPasswordReauthInput.value;
         const newPassword = newPasswordInput.value;
         const confirmNew = confirmNewPasswordInput.value;
         const user = auth.currentUser;
 
         if (!user) {
-            changePasswordMessage.textContent = 'Anda tidak terautentikasi.';
-            changePasswordMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (changePasswordMessage) {
+                changePasswordMessage.textContent = 'Anda tidak terautentikasi.';
+                changePasswordMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            }
             return;
         }
         if (newPassword !== confirmNew) {
-            changePasswordMessage.textContent = 'Password baru tidak cocok.';
-            changePasswordMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (changePasswordMessage) {
+                changePasswordMessage.textContent = 'Password baru tidak cocok.';
+                changePasswordMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            }
             return;
         }
         if (newPassword.length < 6) {
-            changePasswordMessage.textContent = 'Password baru minimal 6 karakter.';
-            changePasswordMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (changePasswordMessage) {
+                changePasswordMessage.textContent = 'Password baru minimal 6 karakter.';
+                changePasswordMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            }
             return;
         }
 
@@ -810,21 +864,23 @@ if (changePasswordForm) {
             await reauthenticateWithCredential(user, credential);
             await updatePassword(user, newPassword);
 
-            changePasswordMessage.textContent = 'Password berhasil diperbarui!';
-            changePasswordMessage.className = 'text-green-500 text-sm mt-4 text-center';
+            if (changePasswordMessage) {
+                changePasswordMessage.textContent = 'Password berhasil diperbarui!';
+                changePasswordMessage.className = 'text-green-500 text-sm mt-4 text-center';
+            }
             setTimeout(closeAllModalsAndResetForms, 1500);
         } catch (error) {
             console.error('Error saat mengubah password:', error.code, error.message);
-            changePasswordMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (changePasswordMessage) changePasswordMessage.className = 'text-red-500 text-sm mt-4 text-center';
             switch (error.code) {
                 case 'auth/wrong-password':
-                    changePasswordMessage.textContent = 'Password saat ini salah.';
+                    if (changePasswordMessage) changePasswordMessage.textContent = 'Password saat ini salah.';
                     break;
                 case 'auth/requires-recent-login':
-                    changePasswordMessage.textContent = 'Untuk keamanan, silakan login ulang dan coba lagi.';
+                    if (changePasswordMessage) changePasswordMessage.textContent = 'Untuk keamanan, silakan login ulang dan coba lagi.';
                     break;
                 default:
-                    changePasswordMessage.textContent = `Gagal mengubah password: ${error.message}`;
+                    if (changePasswordMessage) changePasswordMessage.textContent = `Gagal mengubah password: ${error.message}`;
                     break;
             }
         }
@@ -836,36 +892,40 @@ if (changePasswordForm) {
 
 if (deleteAccountBtn) {
     deleteAccountBtn.addEventListener('click', () => {
-        profileDisplay.classList.add('hidden');
-        deleteAccountConfirmation.classList.remove('hidden');
-        deleteAccountMessage.textContent = '';
-        deletePasswordReauthInput.value = '';
+        if (profileDisplay) profileDisplay.classList.add('hidden');
+        if (deleteAccountConfirmation) deleteAccountConfirmation.classList.remove('hidden');
+        if (deleteAccountMessage) deleteAccountMessage.textContent = '';
+        if (deletePasswordReauthInput) deletePasswordReauthInput.value = '';
     });
 }
 
 if (cancelDeleteBtn) {
     cancelDeleteBtn.addEventListener('click', () => {
-        deleteAccountConfirmation.classList.add('hidden');
-        profileDisplay.classList.remove('hidden');
-        deleteAccountMessage.textContent = '';
-        deletePasswordReauthInput.value = '';
+        if (deleteAccountConfirmation) deleteAccountConfirmation.classList.add('hidden');
+        if (profileDisplay) profileDisplay.classList.remove('hidden');
+        if (deleteAccountMessage) deleteAccountMessage.textContent = '';
+        if (deletePasswordReauthInput) deletePasswordReauthInput.value = '';
     });
 }
 
 if (confirmDeleteAccountBtn) {
     confirmDeleteAccountBtn.addEventListener('click', async () => {
-        deleteAccountMessage.textContent = '';
+        if (deleteAccountMessage) deleteAccountMessage.textContent = '';
         const passwordToDelete = deletePasswordReauthInput.value;
         const user = auth.currentUser;
 
         if (!user) {
-            deleteAccountMessage.textContent = 'Anda tidak terautentikasi.';
-            deleteAccountMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (deleteAccountMessage) {
+                deleteAccountMessage.textContent = 'Anda tidak terautentikasi.';
+                deleteAccountMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            }
             return;
         }
         if (!passwordToDelete) {
-            deleteAccountMessage.textContent = 'Masukkan password Anda untuk konfirmasi.';
-            deleteAccountMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (deleteAccountMessage) {
+                deleteAccountMessage.textContent = 'Masukkan password Anda untuk konfirmasi.';
+                deleteAccountMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            }
             return;
         }
 
@@ -884,23 +944,25 @@ if (confirmDeleteAccountBtn) {
             }
 
             await deleteUser(user);
-            deleteAccountMessage.textContent = 'Akun berhasil dihapus!';
-            deleteAccountMessage.className = 'text-green-500 text-sm mt-4 text-center';
+            if (deleteAccountMessage) {
+                deleteAccountMessage.textContent = 'Akun berhasil dihapus!';
+                deleteAccountMessage.className = 'text-green-500 text-sm mt-4 text-center';
+            }
             setTimeout(closeAllModalsAndResetForms, 1500);
 
         } catch (error) {
             console.error('Error saat menghapus akun:', error.code, error.message);
-            deleteAccountMessage.className = 'text-red-500 text-sm mt-4 text-center';
+            if (deleteAccountMessage) deleteAccountMessage.className = 'text-red-500 text-sm mt-4 text-center';
             switch (error.code) {
                 case 'auth/wrong-password':
                 case 'auth/invalid-credential':
-                    deleteAccountMessage.textContent = 'Gagal menghapus akun: password salah.';
+                    if (deleteAccountMessage) deleteAccountMessage.textContent = 'Gagal menghapus akun: password salah.';
                     break;
                 case 'auth/requires-recent-login':
-                    deleteAccountMessage.textContent = 'Untuk keamanan, silakan login ulang dan coba lagi.';
+                    if (deleteAccountMessage) deleteAccountMessage.textContent = 'Untuk keamanan, silakan login ulang dan coba lagi.';
                     break;
                 default:
-                    deleteAccountMessage.textContent = `Gagal menghapus akun: ${error.message}`;
+                    if (deleteAccountMessage) deleteAccountMessage.textContent = `Gagal menghapus akun: ${error.message}`;
                     break;
             }
         }
