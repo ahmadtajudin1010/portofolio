@@ -20,14 +20,14 @@
     <header class="bg-white shadow-md py-3 px-4 md:px-8 lg:px-16">
         <div class="container mx-auto flex items-center justify-between flex-wrap md:flex-nowrap gap-3">
             <!-- Logo "Toko Online" dengan gaya mirip Tokopedia -->
-            <a href="#" class="text-green-500 font-bold text-xl sm:text-2xl rounded-md flex-shrink-0">
+            <a href="#" class="text-green-500 font-bold text-xl sm:text-2xl rounded-md flex-shrink-0 logo">
                 <span class="bg-green-500 text-white px-2 py-1 rounded-l-md">Toko</span><span
                     class="text-green-500 bg-white border border-green-500 px-2 py-1 rounded-r-md">Online</span>
             </a>
 
             <!-- Search Bar yang responsif -->
             <!-- Akan mengambil lebar penuh di mobile (w-full order-last) dan di tengah di md: -->
-            <div class="w-full order-last md:order-none md:flex-grow md:max-w-xl md:mx-4">
+            <div class="w-full order-last md:order-none md:flex-grow md:max-w-xl md:mx-4 search-bar-container">
                 <div class="relative w-full">
                     <input type="text" placeholder="Cari di Toko Online..."
                         class="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
@@ -44,9 +44,9 @@
 
             <!-- Ikon Navigasi (Keranjang, Notifikasi) dan Kontainer Tombol Auth/Profil -->
             <!-- Jarak antar item lebih kecil di mobile (space-x-2) -->
-            <div id="auth-buttons-container" class="flex items-center space-x-2 sm:space-x-4 flex-shrink-0"
-                style="opacity: 0; transition: opacity 0.3s ease;">
-                <a href="#" class="text-gray-600 hover:text-green-600 relative">
+            <!-- Hapus bg-opacity-75 dari sini, akan di handle di CSS kustom -->
+            <div id="auth-buttons-container" class="flex items-center space-x-2 sm:space-x-4 flex-shrink-0 nav-icons-auth-container" style="opacity: 0; transition: opacity 0.3s ease;">
+                <a href="#" class="text-gray-600 hover:text-green-600 relative nav-icon">
                     <!-- Ikon keranjang belanja -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
@@ -54,9 +54,9 @@
                             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                     <span
-                        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">3</span>
+                        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full badge">3</span>
                 </a>
-                <a href="#" class="text-gray-600 hover:text-green-600">
+                <a href="#" class="text-gray-600 hover:text-green-600 nav-icon">
                     <!-- Ikon notifikasi -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
@@ -64,26 +64,17 @@
                             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                     </svg>
                 </a>
-
+                
                 <!-- Tombol untuk membuka modal login/daftar (visible when logged out) -->
-                <!-- Padding dan teks lebih kecil di mobile -->
-                <button id="auth-button-login"
-                    class="bg-green-500 text-white py-2 px-3 rounded-lg hover:bg-green-600 transition duration-300 text-sm sm:text-base">Login
-                    / Daftar</button>
+                <button id="auth-button-login" class="bg-green-500 text-white py-2 px-3 rounded-lg hover:bg-green-600 transition duration-300 text-sm sm:text-base btn-auth">Login / Daftar</button>
 
                 <!-- Tombol untuk membuka modal profil (visible when logged in) -->
-                <!-- Hanya menampilkan gambar profil -->
-                <button id="auth-button-profile"
-                    class="bg-green-500 p-1 rounded-full hover:bg-green-600 transition duration-300 flex items-center justify-center"
-                    style="display: none;">
-                    <img id="header-profile-photo" src="https://placehold.co/32x32/CCCCCC/000000?text=P"
-                        alt="Foto Profil" class="w-8 h-8 rounded-full object-cover">
+                <button id="auth-button-profile" class="bg-green-500 p-1 rounded-full hover:bg-green-600 transition duration-300 flex items-center justify-center profile-btn" style="display: none;">
+                    <img id="header-profile-photo" src="https://placehold.co/32x32/CCCCCC/000000?text=P" alt="Foto Profil" class="w-8 h-8 rounded-full object-cover profile-icon">
                 </button>
-
+                
                 <!-- Tombol Logout (visible when logged in) -->
-                <button id="auth-button-logout"
-                    class="bg-red-500 text-white py-2 px-3 rounded-lg hover:bg-red-600 transition duration-300 text-sm sm:text-base"
-                    style="display: none;">Logout</button>
+                <button id="auth-button-logout" class="bg-red-500 text-white py-2 px-3 rounded-lg hover:bg-red-600 transition duration-300 text-sm sm:text-base btn-auth btn-logout" style="display: none;">Logout</button>
             </div>
         </div>
     </header>
@@ -98,23 +89,23 @@
 
         <!-- Placeholder untuk kategori atau banner promo -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <div class="bg-white p-6 rounded-lg shadow-md text-center product-item">
                 <h3 class="text-xl font-medium text-gray-700 mb-2">Kategori Populer</h3>
                 <p class="text-gray-500">Akan menampilkan daftar kategori produk.</p>
                 <img src="https://placehold.co/300x150/e0e0e0/555555?text=Kategori" alt="Placeholder Kategori"
-                    class="w-full h-auto rounded-md mt-4">
+                    class="w-full h-auto rounded-md mt-4 product-item-img">
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <div class="bg-white p-6 rounded-lg shadow-md text-center product-item">
                 <h3 class="text-xl font-medium text-gray-700 mb-2">Promo Spesial</h3>
                 <p class="text-gray-500">Akan menampilkan promo dan diskon.</p>
                 <img src="https://placehold.co/300x150/d0e0ff/446699?text=Promo" alt="Placeholder Promo"
-                    class="w-full h-auto rounded-md mt-4">
+                    class="w-full h-auto rounded-md mt-4 product-item-img">
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md text-center">
+            <div class="bg-white p-6 rounded-lg shadow-md text-center product-item">
                 <h3 class="text-xl font-medium text-gray-700 mb-2">Produk Pilihan</h3>
                 <p class="text-gray-500">Akan menampilkan produk-produk terlaris.</p>
                 <img src="https://placehold.co/300x150/ffe0d0/996644?text=Produk" alt="Placeholder Produk"
-                    class="w-full h-auto rounded-md mt-4">
+                    class="w-full h-auto rounded-md mt-4 product-item-img">
             </div>
         </div>
     </main>
@@ -132,26 +123,23 @@
     </footer>
 
     <!-- Bagian MODAL LOGIN -->
-    <div id="login-modal" class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div id="login-modal" class="auth-modal fixed inset-0 bg-gray-600 flex items-center justify-center z-50 hidden">
         <div class="bg-white p-8 rounded-lg shadow-xl w-11/12 max-w-md relative">
-            <span
-                class="close-button absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl cursor-pointer">&times;</span>
+            <span class="close-button absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl cursor-pointer">&times;</span>
             <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Login</h2>
             <form id="auth-form" class="flex flex-col space-y-4">
                 <input type="email" id="auth-email" placeholder="Email" required autocomplete="email"
                     class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400">
-                <input type="password" id="auth-password" placeholder="Password" required
-                    autocomplete="current-password"
+                <input type="password" id="auth-password" placeholder="Password" required autocomplete="current-password"
                     class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400">
                 <button type="submit"
                     class="bg-green-500 text-white p-3 rounded-md font-semibold hover:bg-green-600 transition duration-300">Login</button>
             </form>
             <p id="auth-message" class="text-red-500 text-sm mt-4 text-center"></p>
-
+            
             <!-- Link Reset Password -->
             <p id="reset-password-link-container" class="text-center mt-2 text-gray-600 text-sm" style="display: none;">
-                <span id="reset-password-link" class="text-green-500 font-semibold cursor-pointer hover:underline">Lupa
-                    password? Reset di sini</span>
+                <span id="reset-password-link" class="text-green-500 font-semibold cursor-pointer hover:underline">Lupa password? Reset di sini</span>
             </p>
 
             <p class="text-center mt-4 text-gray-600 text-sm">Belum punya akun? <span id="switch-to-register"
@@ -173,17 +161,14 @@
     </div>
 
     <!-- Bagian MODAL DAFTAR -->
-    <div id="register-modal"
-        class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div id="register-modal" class="auth-modal fixed inset-0 bg-gray-600 flex items-center justify-center z-50 hidden">
         <div class="bg-white p-8 rounded-lg shadow-xl w-11/12 max-w-md relative">
-            <span
-                class="close-button absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl cursor-pointer">&times;</span>
+            <span class="close-button absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl cursor-pointer">&times;</span>
             <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Daftar Akun Baru</h2>
             <form id="register-form" class="flex flex-col space-y-4">
                 <input type="email" id="register-email" placeholder="Email" required autocomplete="email"
                     class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400">
-                <input type="password" id="register-password" placeholder="Password" required
-                    autocomplete="new-password"
+                <input type="password" id="register-password" placeholder="Password" required autocomplete="new-password"
                     class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400">
                 <input type="password" id="register-confirm-password" placeholder="Konfirmasi Password" required
                     autocomplete="new-password"
@@ -216,101 +201,72 @@
     </div>
 
     <!-- Bagian MODAL PROFIL PENGGUNA -->
-    <div id="profile-modal"
-        class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div id="profile-modal" class="auth-modal fixed inset-0 bg-gray-600 flex items-center justify-center z-50 hidden">
         <div class="bg-white p-8 rounded-lg shadow-xl w-11/12 max-w-md relative">
-            <span
-                class="close-button absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl cursor-pointer">&times;</span>
+            <span class="close-button absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl cursor-pointer">&times;</span>
             <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Profil Saya</h2>
-
+            
             <div id="profile-display" class="flex flex-col items-center space-y-4">
                 <!-- Foto Profil di Tampilan Profil -->
-                <img id="profile-photo-display" src="https://placehold.co/120x120/CCCCCC/000000?text=Foto"
-                    alt="Foto Profil" class="w-32 h-32 rounded-full object-cover border-4 border-green-400 shadow-md">
-                <p class="text-lg text-gray-700">Email: <span id="profile-email"
-                        class="font-semibold text-gray-900"></span></p>
-                <p class="text-lg text-gray-700">Peran: <span id="profile-role"
-                        class="font-semibold text-gray-900"></span></p>
-                <p class="text-lg text-gray-700">Nama: <span id="profile-display-name"
-                        class="font-semibold text-gray-900"></span></p>
-
-                <button id="edit-profile-btn"
-                    class="w-full bg-green-500 text-white p-3 rounded-md font-semibold hover:bg-green-600 transition duration-300 mt-4">Edit
-                    Profil</button>
-                <button id="change-password-btn"
-                    class="w-full bg-yellow-500 text-white p-3 rounded-md font-semibold hover:bg-yellow-600 transition duration-300">Ubah
-                    Password</button>
-                <button id="delete-account-btn"
-                    class="w-full bg-red-500 text-white p-3 rounded-md font-semibold hover:bg-red-600 transition duration-300">Hapus
-                    Akun</button>
+                <img id="profile-photo-display" src="https://placehold.co/120x120/CCCCCC/000000?text=Foto" alt="Foto Profil" class="w-32 h-32 rounded-full object-cover border-4 border-green-400 shadow-md">
+                <p class="text-lg text-gray-700">Email: <span id="profile-email" class="font-semibold text-gray-900"></span></p>
+                <p class="text-lg text-gray-700">Peran: <span id="profile-role" class="font-semibold text-gray-900"></span></p>
+                <p class="text-lg text-gray-700">Nama: <span id="profile-display-name" class="font-semibold text-gray-900"></span></p>
+                
+                <button id="edit-profile-btn" class="w-full bg-green-500 text-white p-3 rounded-md font-semibold hover:bg-green-600 transition duration-300 mt-4">Edit Profil</button>
+                <button id="change-password-btn" class="w-full bg-yellow-500 text-white p-3 rounded-md font-semibold hover:bg-yellow-600 transition duration-300">Ubah Password</button>
+                <button id="delete-account-btn" class="w-full bg-red-500 text-white p-3 rounded-md font-semibold hover:bg-red-600 transition duration-300">Hapus Akun</button>
             </div>
 
             <!-- Formulir Edit Profil (awalnya tersembunyi) -->
             <form id="profile-edit-form" class="flex flex-col space-y-4 hidden">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Edit Informasi Profil</h3>
-
+                
                 <!-- Pratinjau Foto Profil di Edit Profil -->
                 <div class="flex flex-col items-center space-y-4 mb-4">
-                    <img id="profile-photo-preview" src="https://placehold.co/120x120/CCCCCC/000000?text=Foto"
-                        alt="Pratinjau Foto"
-                        class="w-32 h-32 rounded-full object-cover border-4 border-green-400 shadow-md">
-                    <label for="profile-photo-input"
-                        class="cursor-pointer bg-green-500 text-white py-2 px-4 rounded-md font-semibold hover:bg-green-600 transition duration-300">
+                    <img id="profile-photo-preview" src="https://placehold.co/120x120/CCCCCC/000000?text=Foto" alt="Pratinjau Foto" class="w-32 h-32 rounded-full object-cover border-4 border-green-400 shadow-md">
+                    <label for="profile-photo-input" class="cursor-pointer bg-green-500 text-white py-2 px-4 rounded-md font-semibold hover:bg-green-600 transition duration-300">
                         Pilih Foto Baru
                         <input type="file" id="profile-photo-input" accept="image/*" class="hidden">
                     </label>
                 </div>
-
+                
                 <!-- Input Nama Tampilan Baru -->
                 <input type="text" id="edit-display-name" placeholder="Nama Tampilan Baru" autocomplete="name"
                     class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400">
-
+                
                 <input type="email" id="edit-email" placeholder="Email Baru" autocomplete="email"
                     class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400">
-
-                <button type="submit"
-                    class="bg-green-500 text-white p-3 rounded-md font-semibold hover:bg-green-600 transition duration-300">Simpan
-                    Perubahan</button>
-                <button type="button" id="cancel-edit-btn"
-                    class="bg-gray-500 text-white p-3 rounded-md font-semibold hover:bg-gray-600 transition duration-300">Batal</button>
+                
+                <button type="submit" class="bg-green-500 text-white p-3 rounded-md font-semibold hover:bg-green-600 transition duration-300">Simpan Perubahan</button>
+                <button type="button" id="cancel-edit-btn" class="bg-gray-500 text-white p-3 rounded-md font-semibold hover:bg-gray-600 transition duration-300">Batal</button>
                 <p id="edit-profile-message" class="text-red-500 text-sm mt-4 text-center"></p>
             </form>
 
             <!-- Formulir Ubah Password (awalnya tersembunyi) -->
             <form id="change-password-form" class="flex flex-col space-y-4 hidden">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Ubah Password</h3>
-                <p class="text-sm text-gray-600 text-center">Untuk keamanan, Anda mungkin perlu login ulang setelah
-                    mengubah password.</p>
-                <input type="password" id="current-password-reauth" placeholder="Password Saat Ini"
-                    autocomplete="current-password"
+                <p class="text-sm text-gray-600 text-center">Untuk keamanan, Anda mungkin perlu login ulang setelah mengubah password.</p>
+                <input type="password" id="current-password-reauth" placeholder="Password Saat Ini" autocomplete="current-password"
                     class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400">
                 <input type="password" id="new-password" placeholder="Password Baru" autocomplete="new-password"
                     class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400">
-                <input type="password" id="confirm-new-password" placeholder="Konfirmasi Password Baru"
-                    autocomplete="new-password"
+                <input type="password" id="confirm-new-password" placeholder="Konfirmasi Password Baru" autocomplete="new-password"
                     class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400">
-                <button type="submit"
-                    class="bg-yellow-500 text-white p-3 rounded-md font-semibold hover:bg-yellow-600 transition duration-300">Ubah
-                    Password</button>
-                <button type="button" id="cancel-password-change-btn"
-                    class="bg-gray-500 text-white p-3 rounded-md font-semibold hover:bg-gray-600 transition duration-300">Batal</button>
+                <button type="submit" class="bg-yellow-500 text-white p-3 rounded-md font-semibold hover:bg-yellow-600 transition duration-300">Ubah Password</button>
+                <button type="button" id="cancel-password-change-btn" class="bg-gray-500 text-white p-3 rounded-md font-semibold hover:bg-gray-600 transition duration-300">Batal</button>
                 <p id="change-password-message" class="text-red-500 text-sm mt-4 text-center"></p>
             </form>
 
             <!-- Konfirmasi Hapus Akun (awalnya tersembunyi) -->
             <div id="delete-account-confirmation" class="hidden text-center">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">Hapus Akun</h3>
-                <p class="text-sm text-red-600 mb-4">Anda akan menghapus akun secara permanen. Tindakan ini tidak dapat
-                    dibatalkan.</p>
+                <p class="text-sm text-red-600 mb-4">Anda akan menghapus akun secara permanen. Tindakan ini tidak dapat dibatalkan.</p>
                 <p class="text-sm text-gray-600 mb-4">Untuk melanjutkan, silakan masukkan password Anda.</p>
-                <input type="password" id="delete-password-reauth" placeholder="Password Anda"
-                    autocomplete="current-password"
+                <input type="password" id="delete-password-reauth" placeholder="Password Anda" autocomplete="current-password"
                     class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 mb-4">
-                <button type="button" id="confirm-delete-account-btn"
-                    class="w-full bg-red-500 text-white p-3 rounded-md font-semibold hover:bg-red-600 transition duration-300">Konfirmasi
-                    Hapus</button>
-                <button type="button" id="cancel-delete-btn"
-                    class="w-full bg-gray-500 text-white p-3 rounded-md font-semibold hover:bg-gray-600 transition duration-300 mt-2">Batal</button>
+                <button type="button" id="confirm-delete-account-btn" class="w-full bg-red-500 text-white p-3 rounded-md font-semibold hover:bg-red-600 transition duration-300">Konfirmasi Hapus</button>
+                <button type="button" id="cancel-delete-btn" class="w-full bg-gray-500 text-white p-3 rounded-md font-semibold hover:bg-gray-600 transition duration-300 mt-2">Batal</button>
                 <p id="delete-account-message" class="text-red-500 text-sm mt-4 text-center"></p>
             </div>
 

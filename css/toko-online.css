@@ -377,35 +377,40 @@ p {
 
 
 /* ----------- Gaya untuk Modal Otentikasi & Profil ----------- */
-.fixed {
+/* Menggunakan auth-modal sebagai selector utama untuk background overlay */
+.auth-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    /* Gunakan rgba di sini untuk transparansi latar belakang */
+    background-color: rgba(75, 85, 99, 0.75); /* Gray 600 dengan opacity 75% */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50; /* Pastikan z-index tinggi agar di atas konten lain */
+    /* Mengelola visibilitas dengan 'hidden' class dari Tailwind di HTML
+       dan memastikan properti display: none bekerja dengan benar */
 }
-.inset-0 {
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-}
-.bg-gray-600 { background-color: rgba(75, 85, 99, 0.75); } /* Gray 600 dengan opacity */
-.bg-opacity-75 { opacity: 0.75; } /* Tailwind class, sebenarnya sudah di bg-gray-600 */
-.flex { display: flex; }
-.items-center { align-items: center; }
-.justify-center { justify-content: center; }
-.z-50 { z-index: 50; }
-.hidden { display: none !important; } /* Paksa display none */
 
 /* Modal Content */
-.bg-white { background-color: #fff; }
-.p-8 { padding: 2rem; }
-.rounded-lg { border-radius: 0.5rem; }
-.shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
-.w-11\/12 { width: 91.666667%; } /* 11/12 dari lebar */
-.max-w-md { max-width: 28rem; } /* Max width 448px */
-.relative { position: relative; }
+.auth-modal > div { /* Target the direct child div which is the modal content */
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 91.666667%; /* w-11/12 */
+    max-width: 28rem; /* max-w-md */
+    position: relative;
+    transform: scale(0.95); /* Sedikit efek zoom in saat muncul */
+    transition: transform 0.3s ease-out;
+}
+
+/* When the modal is NOT hidden (i.e., visible) */
+.auth-modal:not(.hidden) > div {
+    transform: scale(1);
+}
 
 /* Close Button */
 .absolute { position: absolute; }
@@ -570,7 +575,7 @@ p {
         order: 1; /* Pindahkan ke baris kedua setelah logo */
     }
 
-    .nav-icons-auth-container {
+    .auth-buttons-container { /* Gunakan class untuk selektor */
         width: 100%; /* Ambil lebar penuh */
         justify-content: flex-end; /* Pindahkan ke kanan */
         order: 0; /* Pindahkan ke baris pertama setelah logo, sebelum search bar */
@@ -622,7 +627,7 @@ p {
     .search-bar-container {
         order: 0; /* Kembali ke urutan normal */
     }
-    .nav-icons-auth-container {
+    .auth-buttons-container { /* Gunakan class untuk selektor */
         order: 0; /* Kembali ke urutan normal */
     }
 }

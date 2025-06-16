@@ -185,6 +185,7 @@ const updateAuthButtonsVisibility = async (user) => {
 /**
  * Memuat data profil ke modal profil.
  * @param {Object} user - Objek pengguna Firebase saat ini.
+ * Memuat data profil ke modal profil.
  */
 const loadProfileData = async (user) => {
     if (user) {
@@ -232,6 +233,7 @@ const loadProfileData = async (user) => {
  * Menutup semua modal dan mereset form.
  */
 const closeAllModalsAndResetForms = () => {
+    // Gunakan classList.add('hidden') untuk menyembunyikan modal
     if (loginModal) loginModal.classList.add('hidden');
     if (registerModal) registerModal.classList.add('hidden');
     if (profileModal) profileModal.classList.add('hidden');
@@ -338,6 +340,7 @@ closeButtons.forEach(button => {
 });
 
 window.addEventListener('click', (event) => {
+    // Pastikan event.target adalah modal itu sendiri, bukan konten di dalamnya
     if (event.target === loginModal || event.target === registerModal || event.target === profileModal) {
         closeAllModalsAndResetForms();
     }
@@ -348,6 +351,7 @@ window.addEventListener('click', (event) => {
 
 if (authButtonLogin) {
     authButtonLogin.addEventListener('click', () => {
+        // Gunakan classList.remove('hidden') untuk menampilkan modal
         if (loginModal) loginModal.classList.remove('hidden');
         if (authMessage) authMessage.textContent = '';
         if (authForm) authForm.reset();
@@ -491,7 +495,7 @@ if (registerForm) {
             const user = userCredential.user;
             
             // Set displayName awal berdasarkan bagian email sebelum '@'
-            const initialDisplayName = email.split('@')[0]; 
+            const initialDisplayName = user.email.split('@')[0]; 
 
             await setDoc(doc(db, `artifacts/${appId}/users/${user.uid}/profiles`, user.uid), {
                 userType: userType,
